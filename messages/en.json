@@ -1,0 +1,99 @@
+{
+  "Metadata": {
+    "title": "MONEX Academy — Where money is made.",
+    "titleTemplate": "%s · MONEX Academy",
+    "description": "Find a business idea that fits your budget and skills, build your team, learn what you're missing and start earning.",
+    "siteName": "MONEX Academy"
+  },
+  "Common": {
+    "brand": "MONEX Academy",
+    "slogan": "Where money is made.",
+    "skipToContent": "Skip to content",
+    "comingSoon": "Coming soon",
+    "backHome": "Back to home"
+  },
+  "Nav": {
+    "label": "Main navigation",
+    "ideas": "Ideas",
+    "jobs": "Jobs",
+    "talent": "Talent",
+    "academy": "Academy",
+    "pricing": "Pricing",
+    "login": "Log in",
+    "getStarted": "Get started",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "home": "MONEX Academy home"
+  },
+  "Theme": {
+    "toggle": "Switch color theme",
+    "toDark": "Switch to dark mode",
+    "toLight": "Switch to light mode"
+  },
+  "Footer": {
+    "tagline": "The global platform for finding business ideas with real numbers, the people to build them, and the skills to launch.",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "howItWorks": "How it works",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "contentPolicy": "Content Policy",
+    "rights": "© {year} MONEX Academy. All rights reserved.",
+    "disclaimer": "Earnings figures shown on ideas are estimates by their authors, not guarantees."
+  },
+  "Home": {
+    "eyebrow": "Business ideas with real numbers",
+    "title": "Where money is made.",
+    "subtitle": "Find a business that fits your budget, skills and schedule. Then build the team and learn the skills to launch it.",
+    "primaryCta": "Find your idea",
+    "secondaryCta": "How it works",
+    "pillars": {
+      "idea": {
+        "title": "Find",
+        "body": "Ideas with clear investment, earning range and time to first income."
+      },
+      "team": {
+        "title": "Connect",
+        "body": "Partners and talent who bring the skills your idea needs."
+      },
+      "earn": {
+        "title": "Earn",
+        "body": "Launch with a step-by-step checklist and track what you make."
+      }
+    }
+  },
+  "Placeholder": {
+    "title": "{page} is on its way",
+    "body": "We're building this part of MONEX Academy right now. Check back soon."
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "body": "The page you're looking for doesn't exist or has moved."
+  },
+  "Terms": {
+    "mvp": "Minimum viable product: the simplest version of a product that lets you test demand with real customers.",
+    "margin": "The share of revenue left after direct costs. A 40% margin means $40 profit on every $100 of sales.",
+    "unitEconomics": "Revenue and costs measured per single unit (one customer or one sale), to check whether each sale is profitable."
+  },
+  "Pages": {
+    "ideas": "Ideas",
+    "jobs": "Jobs",
+    "talent": "Talent",
+    "academy": "Academy",
+    "pricing": "Pricing",
+    "howItWorks": "How it works",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "contentPolicy": "Content Policy",
+    "login": "Log in",
+    "signup": "Sign up",
+    "resetPassword": "Reset password"
+  }
+}
