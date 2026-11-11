@@ -23,7 +23,12 @@
     "getStarted": "Get started",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "home": "MONEX Academy home"
+    "home": "MONEX Academy home",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "profile": "View profile",
+    "logout": "Log out",
+    "account": "Account menu"
   },
   "Theme": {
     "toggle": "Switch color theme",
@@ -94,6 +99,323 @@
     "contentPolicy": "Content Policy",
     "login": "Log in",
     "signup": "Sign up",
-    "resetPassword": "Reset password"
+    "resetPassword": "Reset password",
+    "updatePassword": "Set a new password",
+    "verify2fa": "Two-factor verification",
+    "onboarding": "Set up your account",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "settingsProfile": "Profile",
+    "settingsPreferences": "Preferences",
+    "settingsAccount": "Account",
+    "settingsSecurity": "Security",
+    "settingsPrivacy": "Privacy & data"
+  },
+  "Errors": {
+    "invalidInput": "Please check the highlighted fields.",
+    "invalidCredentials": "Incorrect email or password.",
+    "emailNotConfirmed": "Please confirm your email first. Check your inbox for the link.",
+    "rateLimited": "Too many attempts. Please wait a few minutes and try again.",
+    "captchaFailed": "We couldn't verify you're human. Please try again.",
+    "weakPassword": "This password is too easy to guess. Choose a stronger one.",
+    "samePassword": "Your new password must be different from the current one.",
+    "linkExpired": "This link has expired or was already used. Request a new one.",
+    "codeIncorrect": "That code isn't correct. Try the latest code from your app.",
+    "accountBlocked": "This account has been blocked. Contact support if you think this is a mistake.",
+    "emailInvalid": "Enter a valid email address.",
+    "signupDisabled": "Sign-ups are temporarily unavailable.",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "usernameTaken": "This username is already taken.",
+    "usernameInvalid": "3–20 characters: lowercase letters, numbers, dots and underscores.",
+    "mustBe18": "You must be 18 or older to use MONEX Academy.",
+    "termsRequired": "Please accept the Terms to continue.",
+    "intentsRequired": "Choose at least one option.",
+    "confirmationMismatch": "That doesn't match. Please try again.",
+    "passwordTooShort": "Use at least 10 characters.",
+    "passwordTooLong": "Use at most 72 characters.",
+    "passwordRequired": "Enter your password.",
+    "passwordsDontMatch": "Passwords don't match.",
+    "birthDateInvalid": "Enter a valid date of birth.",
+    "codeInvalid": "Enter the 6-digit code.",
+    "choiceRequired": "Choose an option.",
+    "required": "This field is required.",
+    "tooLong": "This is too long.",
+    "tooMany": "You've selected too many.",
+    "urlInvalid": "Enter a full link starting with https://",
+    "numberInvalid": "Enter a number between 0 and 80.",
+    "unexpected": "Something went wrong. Please try again."
+  },
+  "Auth": {
+    "or": "or",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "passwordHint": "At least 10 characters.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "birthDate": "Date of birth",
+    "birthDateHint": "You must be 18 or older. This is never shown publicly.",
+    "acceptTerms": "I confirm I am 18 or older and accept the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "continueWithGoogle": "Continue with Google",
+    "verifying": "Verifying you're human…",
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Log in to find your next business.",
+      "passwordTab": "Password",
+      "magicTab": "Email link",
+      "submit": "Log in",
+      "forgot": "Forgot password?",
+      "magicSubmit": "Send me a login link",
+      "magicHint": "We'll email you a secure link. No password needed.",
+      "magicSent": "Check your inbox. We sent a login link to {email}.",
+      "noAccount": "New to MONEX Academy?",
+      "signupLink": "Create an account",
+      "deleted": "Your account is scheduled for deletion and is now hidden. Log in within 30 days to restore it.",
+      "linkExpired": "That link has expired or was already used. Please log in or request a new link."
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Find a business that fits your budget and skills.",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Log in",
+      "checkEmailTitle": "Confirm your email",
+      "checkEmail": "We sent a confirmation link to {email}. Open it to activate your account.",
+      "checkEmailHint": "Didn't get it? Check your spam folder or try again in a few minutes."
+    },
+    "reset": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email and we'll send you a reset link.",
+      "submit": "Send reset link",
+      "sent": "If an account exists for {email}, a reset link is on its way.",
+      "back": "Back to log in"
+    },
+    "update": {
+      "title": "Set a new password",
+      "subtitle": "Choose a strong password you don't use anywhere else.",
+      "submit": "Save new password",
+      "done": "Your password has been updated.",
+      "continue": "Continue to dashboard",
+      "expired": "This reset link has expired. Request a new one."
+    },
+    "mfa": {
+      "title": "Two-factor verification",
+      "subtitle": "Enter the 6-digit code from your authenticator app.",
+      "code": "Authentication code",
+      "submit": "Verify",
+      "useOther": "Log in with a different account"
+    }
+  },
+  "Onboarding": {
+    "title": "Let's set up your account",
+    "subtitle": "A few quick questions so we can recommend ideas that fit you.",
+    "step": "Step {current} of {total}",
+    "back": "Back",
+    "next": "Continue",
+    "finish": "Finish setup",
+    "skip": "Skip for now",
+    "steps": {
+      "account": {
+        "title": "Choose your username",
+        "body": "This is how others will find you on MONEX Academy."
+      },
+      "intents": {
+        "title": "What brings you here?",
+        "body": "Choose everything that applies. You can change this later."
+      },
+      "budget": {
+        "title": "How much can you invest to start?",
+        "body": "We'll show ideas that fit your budget."
+      },
+      "mode": {
+        "title": "Online, in person or both?",
+        "body": "Where would you like to work?"
+      },
+      "team": {
+        "title": "Solo or with a team?",
+        "body": "Some ideas work best alone, others need partners."
+      },
+      "time": {
+        "title": "How much time do you have each week?",
+        "body": "Be realistic. It helps us suggest the right ideas."
+      },
+      "interests": {
+        "title": "Your interests and skills",
+        "body": "Pick the categories you like and the skills you already have."
+      }
+    },
+    "username": "Username",
+    "usernameHint": "Lowercase letters, numbers, dots and underscores.",
+    "usernameAvailable": "Available",
+    "usernameChecking": "Checking…",
+    "categories": "Interests",
+    "skills": "Your skills",
+    "selected": "{count} selected"
+  },
+  "Options": {
+    "intents": {
+      "seeking_idea": {
+        "title": "Find an idea",
+        "body": "I want a business idea that fits me."
+      },
+      "idea_owner": {
+        "title": "Build my idea",
+        "body": "I have an idea and need a team or workers."
+      },
+      "talent": {
+        "title": "Join a project",
+        "body": "I'm looking for paid work or a team to join."
+      }
+    },
+    "budget": {
+      "0": "$0",
+      "1_100": "$1–100",
+      "100_1000": "$100–1,000",
+      "1000_5000": "$1,000–5,000",
+      "5000_20000": "$5,000–20,000",
+      "20000_plus": "$20,000+"
+    },
+    "workPreference": {
+      "online": "Online",
+      "irl": "In person",
+      "both": "Both"
+    },
+    "teamMode": {
+      "solo": "Solo",
+      "team": "With a team"
+    },
+    "weeklyTime": {
+      "lt_5": "Less than 5 hours",
+      "5_15": "5–15 hours",
+      "15_30": "15–30 hours",
+      "full_time": "Full time"
+    },
+    "lookingFor": {
+      "partner": "A partner",
+      "job": "Work or a project",
+      "idea": "A business idea"
+    }
+  },
+  "Dashboard": {
+    "welcome": "Welcome, {name}.",
+    "welcomeNew": "Your account is ready, {name}.",
+    "subtitle": "Your dashboard is being built. Here's what's coming next.",
+    "completeProfile": "Complete your profile",
+    "completeProfileBody": "Add a bio, skills and links so partners can find you.",
+    "browseIdeas": "Browse ideas",
+    "browseIdeasBody": "Explore business ideas with real numbers.",
+    "viewProfile": "View your public profile",
+    "viewProfileBody": "See what others see when they find you."
+  },
+  "Settings": {
+    "title": "Settings",
+    "nav": {
+      "profile": "Profile",
+      "preferences": "Preferences",
+      "account": "Account",
+      "security": "Security",
+      "privacy": "Privacy & data"
+    },
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Changes saved.",
+    "profile": {
+      "title": "Public profile",
+      "body": "This information is visible on your public profile.",
+      "avatarHint": "Profile photo uploads are coming soon.",
+      "bio": "Bio",
+      "bioPlaceholder": "A few sentences about you and what you're working on.",
+      "experience": "Experience",
+      "experiencePlaceholder": "Jobs, projects or businesses you've worked on.",
+      "country": "Country",
+      "countryPlaceholder": "Select a country",
+      "city": "City",
+      "availability": "Availability (hours per week)",
+      "lookingFor": "I'm looking for",
+      "skills": "Skills",
+      "links": "Links",
+      "linkLabel": "Label",
+      "linkUrl": "https://",
+      "addLink": "Add link",
+      "portfolio": "Portfolio",
+      "portfolioTitle": "Project title",
+      "portfolioUrl": "Link (optional)",
+      "addPortfolio": "Add project",
+      "remove": "Remove",
+      "characters": "{count}/{max}"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "body": "Used to personalise your idea recommendations. Only you can see this."
+    },
+    "account": {
+      "title": "Account",
+      "email": "Email address",
+      "emailHint": "Your email is never shown publicly.",
+      "password": "Password",
+      "passwordBody": "Change the password you use to log in.",
+      "noPasswordBody": "You log in with Google or an email link. You can set a password to log in with it too.",
+      "changePassword": "Change password",
+      "setPassword": "Set a password",
+      "theme": "Appearance",
+      "themeBody": "Choose how MONEX Academy looks to you.",
+      "themeOptions": {
+        "system": "System",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "logout": "Log out",
+      "logoutBody": "Sign out of MONEX Academy on this device."
+    },
+    "security": {
+      "title": "Two-factor authentication",
+      "body": "Add a second step to logging in with an authenticator app like Google Authenticator or 1Password.",
+      "enabled": "Two-factor authentication is on.",
+      "disabled": "Two-factor authentication is off.",
+      "enable": "Set up two-factor authentication",
+      "scan": "Scan this QR code with your authenticator app, then enter the 6-digit code it shows.",
+      "manual": "Can't scan? Enter this key manually:",
+      "confirm": "Confirm and turn on",
+      "cancel": "Cancel",
+      "turnedOn": "Two-factor authentication is now on.",
+      "disable": "Turn off two-factor authentication",
+      "disableBody": "Enter a code from your authenticator app to turn it off.",
+      "turnedOff": "Two-factor authentication is off."
+    },
+    "privacy": {
+      "exportTitle": "Download your data",
+      "exportBody": "Get a copy of your personal data as a JSON file.",
+      "export": "Download my data",
+      "deleteTitle": "Delete account",
+      "deleteBody": "Your profile and everything you've posted will be hidden right away. You have 30 days to change your mind by logging in again. After that, your account and content are permanently deleted.",
+      "delete": "Delete my account",
+      "confirmPassword": "Enter your password to confirm",
+      "confirmEmail": "Type your email address ({email}) to confirm",
+      "deleteConfirm": "Permanently delete in 30 days",
+      "cancel": "Cancel"
+    }
+  },
+  "Profile": {
+    "memberSince": "Member since {date}",
+    "about": "About",
+    "experience": "Experience",
+    "skills": "Skills",
+    "links": "Links",
+    "portfolio": "Portfolio",
+    "lookingFor": "Looking for",
+    "availability": "{hours} h / week",
+    "location": "Location",
+    "reviews": "Reviews",
+    "noReviews": "No reviews yet.",
+    "paidOut": "Paid out as creator",
+    "paidOutNone": "No confirmed payouts yet.",
+    "plan": {
+      "pro": "Pro",
+      "elite": "Elite"
+    },
+    "empty": "This user hasn't added details yet.",
+    "edit": "Edit profile"
   }
 }

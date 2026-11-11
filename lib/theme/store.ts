@@ -2,7 +2,7 @@ import { THEME_CHANGE_EVENT, THEME_STORAGE_KEY, type ResolvedTheme, type ThemePr
 
 const MEDIA_QUERY = "(prefers-color-scheme: dark)";
 
-function readPreference(): ThemePreference {
+export function readPreference(): ThemePreference {
   try {
     const value = window.localStorage.getItem(THEME_STORAGE_KEY);
     return value === "light" || value === "dark" ? value : "system";

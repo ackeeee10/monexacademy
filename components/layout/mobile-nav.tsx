@@ -8,11 +8,13 @@ import { useEffect, useState } from "react";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
+import { signOut } from "@/lib/auth/actions";
 import { mainNav } from "@/lib/site";
 
 import { ThemeToggle } from "./theme-toggle";
+import type { HeaderUser } from "./user-menu";
 
-export function MobileNav() {
+export function MobileNav({ user }: { user: HeaderUser | null }) {
   const t = useTranslations("Nav");
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -90,12 +92,32 @@ export function MobileNav() {
             </nav>
 
             <div className="flex flex-col gap-3 px-6 pb-10">
-              <Button asChild size="lg">
-                <Link href="/signup">{t("getStarted")}</Link>
-              </Button>
-              <Button asChild size="lg" variant="secondary">
-                <Link href="/login">{t("login")}</Link>
-              </Button>
+              {user ? (
+                <>
+                  <Button asChild size="lg">
+                    <Link href="/dashboard">{t("dashboard")}</Link>
+                  </Button>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button asChild size="lg" variant="secondary">
+                      <Link href="/settings">{t("settings")}</Link>
+                    </Button>
+                    <form action={signOut}>
+                      <Button type="submit" size="lg" variant="secondary" className="w-full">
+                        {t("logout")}
+                      </Button>
+                    </form>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Button asChild size="lg">
+                    <Link href="/signup">{t("getStarted")}</Link>
+                  </Button>
+                  <Button asChild size="lg" variant="secondary">
+                    <Link href="/login">{t("login")}</Link>
+                  </Button>
+                </>
+              )}
               <ThemeToggle className="self-center" />
             </div>
           </motion.div>

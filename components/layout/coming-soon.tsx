@@ -10,7 +10,7 @@ import { Link } from "@/i18n/navigation";
 
 export type PageKey =
   | "ideas" | "jobs" | "talent" | "academy" | "pricing" | "howItWorks" | "faq" | "contact"
-  | "terms" | "privacy" | "cookies" | "contentPolicy" | "login" | "signup" | "resetPassword";
+  | "terms" | "privacy" | "cookies" | "contentPolicy";
 
 /** Temporary page shell for routes built in later phases. */
 export function ComingSoon({ page }: { page: PageKey }) {

@@ -37,6 +37,12 @@ messages/en.json        every UI string — never hard-code text in components
 lib/                    utilities, theme, site config
 ```
 
+## Database
+
+SQL migrations live in `supabase/migrations/`, reference data in `supabase/seed.sql`.
+Until the Supabase CLI is connected, run them in Supabase → SQL Editor in file order.
+`supabase/tests/accounts.test.mjs` checks the RLS rules against a throwaway local Postgres.
+
 ## Rules
 
 - Colors only through design tokens (`bg-surface`, `text-accent`, …) defined in `app/globals.css`.
