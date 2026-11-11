@@ -22,6 +22,7 @@ import {
 
 import { SaveBar } from "./save-bar";
 import { SettingsSection } from "./section";
+import { runAction } from "@/components/auth/run-action";
 
 const schema = preferencesSchema.omit({ skills: true });
 type Values = Omit<PreferencesInput, "skills">;
@@ -45,7 +46,7 @@ export function PreferencesForm({ initial, categories }: Props) {
   const onSubmit = form.handleSubmit(async (values) => {
     setSaved(false);
     setFormError(undefined);
-    const result = await updatePreferences(values);
+    const result = await runAction(() => updatePreferences(values));
     if (result.ok) setSaved(true);
     else setFormError(errorMessage(result.error));
   });

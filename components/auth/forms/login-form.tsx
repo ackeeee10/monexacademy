@@ -20,6 +20,8 @@ import { GoogleButton, OrDivider } from "../google-button";
 import { PasswordInput } from "../password-input";
 import { useTurnstile } from "../turnstile";
 import { useErrorMessage } from "../use-error";
+import { runAction } from "@/components/auth/run-action";
+import { FormError } from "@/components/auth/form-error";
 
 type Mode = "password" | "magic";
 
@@ -77,7 +79,7 @@ function PasswordLogin({ next }: { next?: string }) {
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(undefined);
     const captchaToken = await turnstile.getToken();
-    const result = await signInWithPassword({ ...values, captchaToken, next });
+    const result = await runAction(() => signInWithPassword({ ...values, captchaToken, next }));
     // On success the action redirects; we only get here on failure.
     if (!result.ok) {
       setFormError(errorMessage(result.error));
@@ -87,7 +89,7 @@ function PasswordLogin({ next }: { next?: string }) {
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
-      {formError && <Alert variant="danger">{formError}</Alert>}
+      {formError && <FormError message={formError} />}
       <Field id="email" label={t("email")} error={errorMessage(errors.email?.message)}>
         <Input
           {...fieldAria("email", errors.email?.message)}
@@ -116,7 +118,7 @@ function PasswordLogin({ next }: { next?: string }) {
       {turnstile.widget}
       <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
         {isSubmitting && <Spinner />}
-        {t("login.submit")}
+        {turnstile.waiting ? t("verifying") : t("login.submit")}
       </Button>
     </form>
   );
@@ -135,7 +137,7 @@ function MagicLinkLogin({ next }: { next?: string }) {
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(undefined);
     const captchaToken = await turnstile.getToken();
-    const result = await sendMagicLink({ ...values, captchaToken, next });
+    const result = await runAction(() => sendMagicLink({ ...values, captchaToken, next }));
     turnstile.reset();
     if (result.ok) setSentTo(values.email);
     else setFormError(errorMessage(result.error));
@@ -145,7 +147,7 @@ function MagicLinkLogin({ next }: { next?: string }) {
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
-      {formError && <Alert variant="danger">{formError}</Alert>}
+      {formError && <FormError message={formError} />}
       <Field id="magic-email" label={t("email")} hint={t("login.magicHint")} error={errorMessage(errors.email?.message)}>
         <Input
           {...fieldAria("magic-email", errors.email?.message, true)}
@@ -158,7 +160,7 @@ function MagicLinkLogin({ next }: { next?: string }) {
       {turnstile.widget}
       <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
         {isSubmitting && <Spinner />}
-        {t("login.magicSubmit")}
+        {turnstile.waiting ? t("verifying") : t("login.magicSubmit")}
       </Button>
     </form>
   );

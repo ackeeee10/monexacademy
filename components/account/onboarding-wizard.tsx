@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Controller, useForm, useWatch, type FieldPath } from "react-hook-form";
 
-import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { ChoiceCard } from "@/components/ui/choice";
 import { Checkbox, fieldAria, Field } from "@/components/ui/field";
@@ -29,6 +28,8 @@ import {
 import { useErrorMessage } from "../auth/use-error";
 import { MultiPicker } from "./pickers";
 import { UsernameField } from "./username-field";
+import { runAction } from "@/components/auth/run-action";
+import { FormError } from "@/components/auth/form-error";
 
 type Props = {
   needsBirthDate: boolean;
@@ -98,11 +99,11 @@ export function OnboardingWizard({ needsBirthDate, needsTerms, suggestedUsername
   }
 
   const submit = form.handleSubmit(async (values) => {
-    const result = await completeOnboarding({
+    const result = await runAction(() => completeOnboarding({
       ...values,
       birthDate: needsBirthDate ? values.birthDate : undefined,
       acceptTerms: needsTerms ? values.acceptTerms : undefined,
-    });
+    }));
     if (!result.ok) {
       setFormError(errorMessage(result.error));
       if (result.fields?.username || result.error === "mustBe18" || result.error === "termsRequired") {
@@ -173,7 +174,7 @@ export function OnboardingWizard({ needsBirthDate, needsTerms, suggestedUsername
             <p className="mt-3 text-muted">{t(`steps.${key}.body`)}</p>
 
             <div className="mt-8 space-y-6">
-              {formError && <Alert variant="danger">{formError}</Alert>}
+              {formError && <FormError message={formError} />}
 
               {key === "account" && (
                 <>

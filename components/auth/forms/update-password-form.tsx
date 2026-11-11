@@ -16,6 +16,8 @@ import { newPasswordSchema, type NewPasswordInput } from "@/lib/validation/auth"
 
 import { PasswordInput } from "../password-input";
 import { useErrorMessage } from "../use-error";
+import { runAction } from "@/components/auth/run-action";
+import { FormError } from "@/components/auth/form-error";
 
 type Props = {
   /** Where to go after saving; the settings page passes its own path. */
@@ -37,7 +39,7 @@ export function UpdatePasswordForm({ doneHref = "/dashboard", submitLabel }: Pro
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(undefined);
-    const result = await updatePassword(values);
+    const result = await runAction(() => updatePassword(values));
     if (result.ok) {
       setDone(true);
       form.reset();
@@ -62,7 +64,7 @@ export function UpdatePasswordForm({ doneHref = "/dashboard", submitLabel }: Pro
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
-      {formError && <Alert variant="danger">{formError}</Alert>}
+      {formError && <FormError message={formError} />}
       <Field id="new-password" label={t("newPassword")} hint={t("passwordHint")} error={errorMessage(errors.password?.message)}>
         <PasswordInput
           {...fieldAria("new-password", errors.password?.message, true)}

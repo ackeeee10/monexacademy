@@ -12,6 +12,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { deleteAccount } from "@/lib/account/actions";
+import { runAction } from "@/components/auth/run-action";
 
 export function DeleteAccount({ email, hasPassword }: { email: string; hasPassword: boolean }) {
   const t = useTranslations("Settings.privacy");
@@ -27,7 +28,7 @@ export function DeleteAccount({ email, hasPassword }: { email: string; hasPasswo
     setPending(true);
     setError(undefined);
     const captchaToken = hasPassword ? await turnstile.getToken() : undefined;
-    const result = await deleteAccount({ confirmation: value, captchaToken });
+    const result = await runAction(() => deleteAccount({ confirmation: value, captchaToken }));
     // Success redirects away; we only get here on failure.
     setPending(false);
     turnstile.reset();

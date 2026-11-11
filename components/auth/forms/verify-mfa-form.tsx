@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { fieldAria, Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,8 @@ import { signOut, verifyMfaSignIn } from "@/lib/auth/actions";
 import { totpCodeSchema, type TotpCodeInput } from "@/lib/validation/auth";
 
 import { useErrorMessage } from "../use-error";
+import { runAction } from "@/components/auth/run-action";
+import { FormError } from "@/components/auth/form-error";
 
 export function VerifyMfaForm() {
   const t = useTranslations("Auth");
@@ -27,7 +28,7 @@ export function VerifyMfaForm() {
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(undefined);
-    const result = await verifyMfaSignIn({ ...values, next });
+    const result = await runAction(() => verifyMfaSignIn({ ...values, next }));
     if (!result.ok) {
       setFormError(errorMessage(result.error));
       form.setValue("code", "");
@@ -37,7 +38,7 @@ export function VerifyMfaForm() {
   return (
     <div className="space-y-5">
       <form onSubmit={onSubmit} noValidate className="space-y-5">
-        {formError && <Alert variant="danger">{formError}</Alert>}
+        {formError && <FormError message={formError} />}
         <Field id="code" label={t("mfa.code")} error={errorMessage(errors.code?.message)}>
           <Input
             {...fieldAria("code", errors.code?.message)}

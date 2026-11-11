@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox, fieldAria, Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -19,6 +18,8 @@ import { GoogleButton, OrDivider } from "../google-button";
 import { PasswordInput } from "../password-input";
 import { useTurnstile } from "../turnstile";
 import { useErrorMessage } from "../use-error";
+import { runAction } from "@/components/auth/run-action";
+import { FormError } from "@/components/auth/form-error";
 
 export function SignupForm() {
   const t = useTranslations("Auth");
@@ -36,7 +37,7 @@ export function SignupForm() {
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(undefined);
     const captchaToken = await turnstile.getToken();
-    const result = await signUp({ ...values, captchaToken });
+    const result = await runAction(() => signUp({ ...values, captchaToken }));
     turnstile.reset();
     if (result.ok) setSentTo(values.email);
     else setFormError(errorMessage(result.error));
@@ -60,7 +61,7 @@ export function SignupForm() {
       <GoogleButton next="/onboarding" />
       <OrDivider />
       <form onSubmit={onSubmit} noValidate className="space-y-5">
-        {formError && <Alert variant="danger">{formError}</Alert>}
+        {formError && <FormError message={formError} />}
         <Field id="email" label={t("email")} error={errorMessage(errors.email?.message)}>
           <Input
             {...fieldAria("email", errors.email?.message)}
@@ -113,7 +114,7 @@ export function SignupForm() {
         {turnstile.widget}
         <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
           {isSubmitting && <Spinner />}
-          {t("signup.submit")}
+          {turnstile.waiting ? t("verifying") : t("signup.submit")}
         </Button>
       </form>
     </div>

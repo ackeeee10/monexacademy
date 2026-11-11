@@ -20,6 +20,7 @@ import { LOOKING_FOR, profileSchema, type ProfileInput, type ProfileOutput } fro
 
 import { SaveBar } from "./save-bar";
 import { SettingsSection } from "./section";
+import { runAction } from "@/components/auth/run-action";
 
 type Props = {
   initial: ProfileInput;
@@ -48,7 +49,7 @@ export function ProfileForm({ initial, avatarUrl, skills, countries }: Props) {
     const values = form.getValues();
     setSaved(false);
     setFormError(undefined);
-    const result = await updateProfile(values);
+    const result = await runAction(() => updateProfile(values));
     if (result.ok) {
       setSaved(true);
       setCurrentUsername(values.username);

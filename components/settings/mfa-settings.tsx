@@ -11,6 +11,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { confirmMfaEnrollment, disableMfa, startMfaEnrollment } from "@/lib/auth/actions";
+import { runAction } from "@/components/auth/run-action";
 
 type Enrollment = { factorId: string; qrCode: string; secret: string };
 
@@ -44,7 +45,7 @@ export function MfaSettings({ enabled: initialEnabled }: { enabled: boolean }) {
     setPending(true);
     setError(undefined);
     setNotice(undefined);
-    const result = await startMfaEnrollment();
+    const result = await runAction(() => startMfaEnrollment());
     setPending(false);
     if (result.ok) setEnrollment(result.data);
     else setError(errorMessage(result.error));
@@ -55,7 +56,7 @@ export function MfaSettings({ enabled: initialEnabled }: { enabled: boolean }) {
     if (!enrollment) return;
     setPending(true);
     setError(undefined);
-    const result = await confirmMfaEnrollment({ factorId: enrollment.factorId, code });
+    const result = await runAction(() => confirmMfaEnrollment({ factorId: enrollment.factorId, code }));
     setPending(false);
     if (result.ok) {
       setEnabled(true);
@@ -69,7 +70,7 @@ export function MfaSettings({ enabled: initialEnabled }: { enabled: boolean }) {
     e.preventDefault();
     setPending(true);
     setError(undefined);
-    const result = await disableMfa({ code });
+    const result = await runAction(() => disableMfa({ code }));
     setPending(false);
     if (result.ok) {
       setEnabled(false);

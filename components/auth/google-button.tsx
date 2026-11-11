@@ -8,6 +8,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { signInWithGoogle } from "@/lib/auth/actions";
 
 import { useErrorMessage } from "./use-error";
+import { runAction } from "@/components/auth/run-action";
 
 function GoogleMark() {
   return (
@@ -29,7 +30,7 @@ export function GoogleButton({ next }: { next?: string }) {
   async function onClick() {
     setPending(true);
     setError(undefined);
-    const result = await signInWithGoogle(next);
+    const result = await runAction(() => signInWithGoogle(next));
     if (result.ok && result.redirectTo) {
       window.location.assign(result.redirectTo);
       return;

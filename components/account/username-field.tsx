@@ -35,7 +35,7 @@ export function UsernameField({ value, current, error, inputProps }: UsernameFie
     if (!checkable) return;
     let cancelled = false;
     const timer = setTimeout(async () => {
-      const available = await checkUsernameAvailable(normalized);
+      const available = await checkUsernameAvailable(normalized).catch(() => null);
       if (!cancelled) setResult({ value: normalized, available });
     }, 400);
     return () => {

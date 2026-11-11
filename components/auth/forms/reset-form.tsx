@@ -15,6 +15,8 @@ import { resetRequestSchema, type ResetRequestInput } from "@/lib/validation/aut
 
 import { useTurnstile } from "../turnstile";
 import { useErrorMessage } from "../use-error";
+import { runAction } from "@/components/auth/run-action";
+import { FormError } from "@/components/auth/form-error";
 
 export function ResetForm() {
   const t = useTranslations("Auth");
@@ -29,7 +31,7 @@ export function ResetForm() {
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(undefined);
     const captchaToken = await turnstile.getToken();
-    const result = await requestPasswordReset({ ...values, captchaToken });
+    const result = await runAction(() => requestPasswordReset({ ...values, captchaToken }));
     turnstile.reset();
     if (result.ok) setSentTo(values.email);
     else setFormError(errorMessage(result.error));
@@ -39,7 +41,7 @@ export function ResetForm() {
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
-      {formError && <Alert variant="danger">{formError}</Alert>}
+      {formError && <FormError message={formError} />}
       <Field id="email" label={t("email")} error={errorMessage(errors.email?.message)}>
         <Input
           {...fieldAria("email", errors.email?.message)}
@@ -52,7 +54,7 @@ export function ResetForm() {
       {turnstile.widget}
       <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
         {isSubmitting && <Spinner />}
-        {t("reset.submit")}
+        {turnstile.waiting ? t("verifying") : t("reset.submit")}
       </Button>
     </form>
   );
