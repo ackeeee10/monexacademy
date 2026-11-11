@@ -5,7 +5,6 @@ import { getLocale } from "next-intl/server";
 import type { z } from "zod";
 
 import { redirect } from "@/i18n/navigation";
-import { getSiteUrl } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 import {
   magicLinkSchema,
@@ -22,6 +21,7 @@ import {
   type TotpCodeInput,
 } from "@/lib/validation/auth";
 
+import { getRequestOrigin } from "./origin";
 import { safeNextPath } from "./redirect";
 import type { ActionResult, AuthErrorKey } from "./types";
 
@@ -73,8 +73,8 @@ function authErrorKey(error: AuthError): AuthErrorKey {
   }
 }
 
-function callbackUrl(next: string): string {
-  return `${getSiteUrl()}/api/auth/callback?next=${encodeURIComponent(next)}`;
+async function callbackUrl(next: string): Promise<string> {
+  return `${await getRequestOrigin()}/api/auth/callback?next=${encodeURIComponent(next)}`;
 }
 
 /**
@@ -106,7 +106,7 @@ export async function signUp(input: SignUpInput): Promise<ActionResult> {
     email,
     password,
     options: {
-      emailRedirectTo: callbackUrl("/onboarding"),
+      emailRedirectTo: await callbackUrl("/onboarding"),
       captchaToken,
       data: { birth_date: birthDate, terms_accepted: "true" },
     },
@@ -142,7 +142,7 @@ export async function sendMagicLink(input: MagicLinkInput): Promise<ActionResult
     options: {
       // New users can join with a magic link; onboarding asks for birth date and terms.
       shouldCreateUser: true,
-      emailRedirectTo: callbackUrl(safeNextPath(next)),
+      emailRedirectTo: await callbackUrl(safeNextPath(next)),
       captchaToken,
     },
   });
@@ -155,7 +155,7 @@ export async function signInWithGoogle(next?: string): Promise<ActionResult> {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: callbackUrl(safeNextPath(next)) },
+    options: { redirectTo: await callbackUrl(safeNextPath(next)) },
   });
   if (error || !data.url) return { ok: false, error: error ? authErrorKey(error) : "unexpected" };
   return { ok: true, redirectTo: data.url };
@@ -179,7 +179,7 @@ export async function requestPasswordReset(input: ResetRequestInput): Promise<Ac
 
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: callbackUrl("/update-password"),
+    redirectTo: await callbackUrl("/update-password"),
     captchaToken,
   });
 

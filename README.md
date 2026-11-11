@@ -48,4 +48,6 @@ Until the Supabase CLI is connected, run them in Supabase → SQL Editor in file
 - Colors only through design tokens (`bg-surface`, `text-accent`, …) defined in `app/globals.css`.
 - All UI text goes through `messages/*.json`.
 - Secrets live in `.env.local` and Netlify environment variables only.
-- Every push to `main` deploys to Netlify.
+- Work happens on the `dev` branch; Netlify builds it as a free branch deploy at
+  https://dev--monexacademy.netlify.app. `main` (production, costs deploy credits)
+  is updated only when a phase is approved.
