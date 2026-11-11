@@ -3,7 +3,8 @@
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,16 @@ import { mainNav } from "@/lib/site";
 import { ThemeToggle } from "./theme-toggle";
 import type { HeaderUser } from "./user-menu";
 
+const noopSubscribe = () => () => {};
+
 export function MobileNav({ user }: { user: HeaderUser | null }) {
+  // The header uses backdrop-blur, which traps `position: fixed` children inside
+  // the header box. Rendering the menu into <body> keeps it truly full screen.
+  const mounted = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
   const t = useTranslations("Nav");
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -51,78 +61,99 @@ export function MobileNav({ user }: { user: HeaderUser | null }) {
         <Menu aria-hidden />
       </Button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            id="mobile-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label={t("label")}
-            className="fixed inset-0 z-50 flex flex-col bg-bg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className="flex h-16 items-center justify-between px-4">
-              <Link href="/" aria-label={t("home")} className="text-text">
-                <Logo className="h-7" title={null} />
-              </Link>
-              <Button variant="ghost" size="icon" aria-label={t("closeMenu")} onClick={() => setOpen(false)}>
-                <X aria-hidden />
-              </Button>
-            </div>
-
-            <nav aria-label={t("label")} className="flex flex-1 flex-col px-6 pt-8">
-              {mainNav.map((item, i) => (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: 0.04 * i, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <Link
-                    href={item.href}
-                    className="font-display block border-b border-border py-4 text-2xl font-semibold text-text"
-                  >
-                    {t(item.key)}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                id="mobile-menu"
+                role="dialog"
+                aria-modal="true"
+                aria-label={t("label")}
+                className="fixed inset-0 z-50 flex flex-col bg-bg"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex h-16 items-center justify-between px-4">
+                  <Link href="/" aria-label={t("home")} className="text-text">
+                    <Logo className="h-7" title={null} />
                   </Link>
-                </motion.div>
-              ))}
-            </nav>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={t("closeMenu")}
+                    onClick={() => setOpen(false)}
+                  >
+                    <X aria-hidden />
+                  </Button>
+                </div>
 
-            <div className="flex flex-col gap-3 px-6 pb-10">
-              {user ? (
-                <>
-                  <Button asChild size="lg">
-                    <Link href="/dashboard">{t("dashboard")}</Link>
-                  </Button>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button asChild size="lg" variant="secondary">
-                      <Link href="/settings">{t("settings")}</Link>
-                    </Button>
-                    <form action={signOut}>
-                      <Button type="submit" size="lg" variant="secondary" className="w-full">
-                        {t("logout")}
+                <nav
+                  aria-label={t("label")}
+                  className="flex flex-1 flex-col px-6 pt-8"
+                >
+                  {mainNav.map((item, i) => (
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.35,
+                        delay: 0.04 * i,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                    >
+                      <Link
+                        href={item.href}
+                        className="font-display block border-b border-border py-4 text-2xl font-semibold text-text"
+                      >
+                        {t(item.key)}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </nav>
+
+                <div className="flex flex-col gap-3 px-6 pb-10">
+                  {user ? (
+                    <>
+                      <Button asChild size="lg">
+                        <Link href="/dashboard">{t("dashboard")}</Link>
                       </Button>
-                    </form>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Button asChild size="lg">
-                    <Link href="/signup">{t("getStarted")}</Link>
-                  </Button>
-                  <Button asChild size="lg" variant="secondary">
-                    <Link href="/login">{t("login")}</Link>
-                  </Button>
-                </>
-              )}
-              <ThemeToggle className="self-center" />
-            </div>
-          </motion.div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <Button asChild size="lg" variant="secondary">
+                          <Link href="/settings">{t("settings")}</Link>
+                        </Button>
+                        <form action={signOut}>
+                          <Button
+                            type="submit"
+                            size="lg"
+                            variant="secondary"
+                            className="w-full"
+                          >
+                            {t("logout")}
+                          </Button>
+                        </form>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <Button asChild size="lg">
+                        <Link href="/signup">{t("getStarted")}</Link>
+                      </Button>
+                      <Button asChild size="lg" variant="secondary">
+                        <Link href="/login">{t("login")}</Link>
+                      </Button>
+                    </>
+                  )}
+                  <ThemeToggle className="self-center" />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </div>
   );
 }
