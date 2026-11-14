@@ -5,6 +5,7 @@ import { getLocale } from "next-intl/server";
 import type { z } from "zod";
 
 import { redirect } from "@/i18n/navigation";
+import { env } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
 import {
   magicLinkSchema,
@@ -151,7 +152,23 @@ export async function sendMagicLink(input: MagicLinkInput): Promise<ActionResult
   return { ok: true };
 }
 
+/** Asks Supabase Auth whether the Google provider is switched on. */
+async function isGoogleEnabled(): Promise<boolean> {
+  try {
+    const res = await fetch(`${env.supabaseUrl()}/auth/v1/settings`, {
+      headers: { apikey: env.supabasePublishableKey() },
+      cache: "no-store",
+    });
+    if (!res.ok) return true; // Unknown: let Supabase decide.
+    const settings = (await res.json()) as { external?: Record<string, boolean> };
+    return settings.external?.google === true;
+  } catch {
+    return true;
+  }
+}
+
 export async function signInWithGoogle(next?: string): Promise<ActionResult> {
+  if (!(await isGoogleEnabled())) return { ok: false, error: "googleUnavailable" };
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",

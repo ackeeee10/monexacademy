@@ -18,6 +18,7 @@ export type AuthErrorKey =
   | "termsRequired"
   | "intentsRequired"
   | "confirmationMismatch"
+  | "googleUnavailable"
   | "unexpected";
 
 export type ActionResult<T = undefined> =

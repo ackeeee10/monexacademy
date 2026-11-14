@@ -143,7 +143,8 @@
     "tooMany": "You've selected too many.",
     "urlInvalid": "Enter a full link starting with https://",
     "numberInvalid": "Enter a number between 0 and 80.",
-    "unexpected": "Something went wrong. Please try again."
+    "unexpected": "Something went wrong. Please try again.",
+    "googleUnavailable": "Google sign-in isn't available yet. Please use your email instead."
   },
   "Auth": {
     "or": "or",
