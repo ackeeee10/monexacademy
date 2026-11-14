@@ -72,24 +72,27 @@ function PasswordLogin({ next }: { next?: string }) {
   const errorMessage = useErrorMessage();
   const turnstile = useTurnstile();
   const [formError, setFormError] = useState<string>();
+  const [formDetail, setFormDetail] = useState<string>();
 
   const form = useForm<SignInInput>({ resolver: zodResolver(signInSchema), defaultValues: { email: "", password: "", next } });
   const { errors, isSubmitting } = form.formState;
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(undefined);
+    setFormDetail(undefined);
     const captchaToken = await turnstile.getToken();
     const result = await runAction(() => signInWithPassword({ ...values, captchaToken, next }));
     // On success the action redirects; we only get here on failure.
     if (!result.ok) {
       setFormError(errorMessage(result.error));
+      setFormDetail(result.error === "captchaFailed" ? (turnstile.lastError() ?? result.detail) : undefined);
       turnstile.reset();
     }
   });
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
-      {formError && <FormError message={formError} />}
+      {formError && <FormError message={formError} detail={formDetail} />}
       <Field id="email" label={t("email")} error={errorMessage(errors.email?.message)}>
         <Input
           {...fieldAria("email", errors.email?.message)}
@@ -129,6 +132,7 @@ function MagicLinkLogin({ next }: { next?: string }) {
   const errorMessage = useErrorMessage();
   const turnstile = useTurnstile();
   const [formError, setFormError] = useState<string>();
+  const [formDetail, setFormDetail] = useState<string>();
   const [sentTo, setSentTo] = useState<string>();
 
   const form = useForm<MagicLinkInput>({ resolver: zodResolver(magicLinkSchema), defaultValues: { email: "" } });
@@ -136,18 +140,22 @@ function MagicLinkLogin({ next }: { next?: string }) {
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(undefined);
+    setFormDetail(undefined);
     const captchaToken = await turnstile.getToken();
     const result = await runAction(() => sendMagicLink({ ...values, captchaToken, next }));
     turnstile.reset();
     if (result.ok) setSentTo(values.email);
-    else setFormError(errorMessage(result.error));
+    else {
+      setFormError(errorMessage(result.error));
+      setFormDetail(result.error === "captchaFailed" ? (turnstile.lastError() ?? result.detail) : undefined);
+    }
   });
 
   if (sentTo) return <Alert variant="success">{t("login.magicSent", { email: sentTo })}</Alert>;
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
-      {formError && <FormError message={formError} />}
+      {formError && <FormError message={formError} detail={formDetail} />}
       <Field id="magic-email" label={t("email")} hint={t("login.magicHint")} error={errorMessage(errors.email?.message)}>
         <Input
           {...fieldAria("magic-email", errors.email?.message, true)}

@@ -26,6 +26,7 @@ export function SignupForm() {
   const errorMessage = useErrorMessage();
   const turnstile = useTurnstile();
   const [formError, setFormError] = useState<string>();
+  const [formDetail, setFormDetail] = useState<string>();
   const [sentTo, setSentTo] = useState<string>();
 
   const form = useForm<SignUpInput>({
@@ -36,11 +37,15 @@ export function SignupForm() {
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(undefined);
+    setFormDetail(undefined);
     const captchaToken = await turnstile.getToken();
     const result = await runAction(() => signUp({ ...values, captchaToken }));
     turnstile.reset();
     if (result.ok) setSentTo(values.email);
-    else setFormError(errorMessage(result.error));
+    else {
+      setFormError(errorMessage(result.error));
+      setFormDetail(result.error === "captchaFailed" ? (turnstile.lastError() ?? result.detail) : undefined);
+    }
   });
 
   if (sentTo) {
@@ -61,7 +66,7 @@ export function SignupForm() {
       <GoogleButton next="/onboarding" />
       <OrDivider />
       <form onSubmit={onSubmit} noValidate className="space-y-5">
-        {formError && <FormError message={formError} />}
+        {formError && <FormError message={formError} detail={formDetail} />}
         <Field id="email" label={t("email")} error={errorMessage(errors.email?.message)}>
           <Input
             {...fieldAria("email", errors.email?.message)}

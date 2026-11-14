@@ -113,7 +113,7 @@
   },
   "Errors": {
     "invalidInput": "Please check the highlighted fields.",
-    "invalidCredentials": "Incorrect email or password.",
+    "invalidCredentials": "No account matches this email and password. Check your details or create an account.",
     "emailNotConfirmed": "Please confirm your email first. Check your inbox for the link.",
     "rateLimited": "Too many attempts. Please wait a few minutes and try again.",
     "captchaFailed": "We couldn't verify you're human. Please try again.",
@@ -144,7 +144,8 @@
     "urlInvalid": "Enter a full link starting with https://",
     "numberInvalid": "Enter a number between 0 and 80.",
     "unexpected": "Something went wrong. Please try again.",
-    "googleUnavailable": "Google sign-in isn't available yet. Please use your email instead."
+    "googleUnavailable": "Google sign-in isn't available yet. Please use your email instead.",
+    "noAccount": "There's no account with this email yet. Create an account first."
   },
   "Auth": {
     "or": "or",
@@ -169,7 +170,7 @@
       "submit": "Log in",
       "forgot": "Forgot password?",
       "magicSubmit": "Send me a login link",
-      "magicHint": "We'll email you a secure link. No password needed.",
+      "magicHint": "We'll email you a secure login link. No password needed.",
       "magicSent": "Check your inbox. We sent a login link to {email}.",
       "noAccount": "New to MONEX Academy?",
       "signupLink": "Create an account",

@@ -19,8 +19,9 @@ export type AuthErrorKey =
   | "intentsRequired"
   | "confirmationMismatch"
   | "googleUnavailable"
+  | "noAccount"
   | "unexpected";
 
 export type ActionResult<T = undefined> =
   | ({ ok: true; redirectTo?: string } & (T extends undefined ? { data?: undefined } : { data: T }))
-  | { ok: false; error: AuthErrorKey; fields?: Record<string, string> };
+  | { ok: false; error: AuthErrorKey; fields?: Record<string, string>; detail?: string };

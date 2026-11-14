@@ -23,6 +23,7 @@ export function ResetForm() {
   const errorMessage = useErrorMessage();
   const turnstile = useTurnstile();
   const [formError, setFormError] = useState<string>();
+  const [formDetail, setFormDetail] = useState<string>();
   const [sentTo, setSentTo] = useState<string>();
 
   const form = useForm<ResetRequestInput>({ resolver: zodResolver(resetRequestSchema), defaultValues: { email: "" } });
@@ -30,18 +31,22 @@ export function ResetForm() {
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(undefined);
+    setFormDetail(undefined);
     const captchaToken = await turnstile.getToken();
     const result = await runAction(() => requestPasswordReset({ ...values, captchaToken }));
     turnstile.reset();
     if (result.ok) setSentTo(values.email);
-    else setFormError(errorMessage(result.error));
+    else {
+      setFormError(errorMessage(result.error));
+      setFormDetail(result.error === "captchaFailed" ? (turnstile.lastError() ?? result.detail) : undefined);
+    }
   });
 
   if (sentTo) return <Alert variant="success">{t("reset.sent", { email: sentTo })}</Alert>;
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
-      {formError && <FormError message={formError} />}
+      {formError && <FormError message={formError} detail={formDetail} />}
       <Field id="email" label={t("email")} error={errorMessage(errors.email?.message)}>
         <Input
           {...fieldAria("email", errors.email?.message)}

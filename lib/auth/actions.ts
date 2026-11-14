@@ -58,6 +58,9 @@ function authErrorKey(error: AuthError): AuthErrorKey {
       return "samePassword";
     case "otp_expired":
       return "linkExpired";
+    case "otp_disabled":
+      // Magic link requested for an email without an account (shouldCreateUser: false).
+      return "noAccount";
     case "mfa_verification_failed":
     case "mfa_challenge_expired":
       return "codeIncorrect";
@@ -72,6 +75,12 @@ function authErrorKey(error: AuthError): AuthErrorKey {
       console.error("[auth]", error.code, error.message);
       return "unexpected";
   }
+}
+
+/** Failure result; captcha errors carry Supabase's reason (no secrets) for diagnosis. */
+function authFailure(error: AuthError): ActionResult {
+  const key = authErrorKey(error);
+  return { ok: false, error: key, detail: key === "captchaFailed" ? `Supabase: ${error.message}` : undefined };
 }
 
 async function callbackUrl(next: string): Promise<string> {
@@ -113,7 +122,7 @@ export async function signUp(input: SignUpInput): Promise<ActionResult> {
     },
   });
 
-  if (error) return { ok: false, error: authErrorKey(error) };
+  if (error) return authFailure(error);
   // Supabase doesn't reveal whether the email was already registered; neither do we.
   return { ok: true };
 }
@@ -125,7 +134,7 @@ export async function signInWithPassword(input: SignInInput): Promise<ActionResu
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password, options: { captchaToken } });
-  if (error) return { ok: false, error: authErrorKey(error) };
+  if (error) return authFailure(error);
 
   const destination = await postSignInDestination(safeNextPath(next));
   const locale = await getLocale();
@@ -141,14 +150,14 @@ export async function sendMagicLink(input: MagicLinkInput): Promise<ActionResult
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      // New users can join with a magic link; onboarding asks for birth date and terms.
-      shouldCreateUser: true,
+      // Log-in only: new users sign up on /signup (birth date + terms first).
+      shouldCreateUser: false,
       emailRedirectTo: await callbackUrl(safeNextPath(next)),
       captchaToken,
     },
   });
 
-  if (error) return { ok: false, error: authErrorKey(error) };
+  if (error) return authFailure(error);
   return { ok: true };
 }
 
@@ -204,7 +213,7 @@ export async function requestPasswordReset(input: ResetRequestInput): Promise<Ac
   // Never reveal whether an account exists; only surface rate limits and captcha problems.
   if (error) {
     const key = authErrorKey(error);
-    if (key === "rateLimited" || key === "captchaFailed") return { ok: false, error: key };
+    if (key === "rateLimited" || key === "captchaFailed") return authFailure(error);
   }
   return { ok: true };
 }

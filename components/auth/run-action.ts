@@ -2,7 +2,7 @@
 
 import type { AuthErrorKey } from "@/lib/auth/types";
 
-type Failure = { ok: false; error: AuthErrorKey; fields?: Record<string, string> };
+type Failure = { ok: false; error: AuthErrorKey; fields?: Record<string, string>; detail?: string };
 
 /** Next.js uses thrown errors with a NEXT_* digest for redirects; those must pass through. */
 function isNextInternal(error: unknown): boolean {
