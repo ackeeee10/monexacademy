@@ -3,7 +3,7 @@ import { z } from "zod";
 /** Error messages are translation keys under "Errors" in messages/*.json. */
 export const email = z.string().trim().toLowerCase().pipe(z.email("emailInvalid").max(254, "emailInvalid"));
 
-export const password = z.string().min(10, "passwordTooShort").max(72, "passwordTooLong");
+export const password = z.string().min(8, "passwordTooShort").max(72, "passwordTooLong");
 
 export const USERNAME_PATTERN = /^[a-z0-9._]{3,20}$/;
 export const username = z

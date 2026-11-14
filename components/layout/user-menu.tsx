@@ -3,6 +3,7 @@
 import { LayoutDashboard, LogOut, Settings, UserRound } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import { useTranslations } from "next-intl";
+import { useTransition } from "react";
 
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,7 @@ const itemClass =
 export function UserMenu({ user }: { user: HeaderUser }) {
   const t = useTranslations("Nav");
   const tProfile = useTranslations("Profile");
+  const [signingOut, startSignOut] = useTransition();
 
   return (
     <DropdownMenu.Root>
@@ -69,14 +71,18 @@ export function UserMenu({ user }: { user: HeaderUser }) {
             </Link>
           </DropdownMenu.Item>
           <DropdownMenu.Separator className="my-1 h-px bg-border" />
-          <form action={signOut}>
-            <DropdownMenu.Item asChild className={itemClass}>
-              <button type="submit" className="w-full">
-                <LogOut aria-hidden />
-                {t("logout")}
-              </button>
-            </DropdownMenu.Item>
-          </form>
+          {/* Not a <form>: the menu unmounts on select, before a form could submit. */}
+          <DropdownMenu.Item
+            className={itemClass}
+            disabled={signingOut}
+            onSelect={(event) => {
+              event.preventDefault();
+              startSignOut(() => signOut());
+            }}
+          >
+            <LogOut aria-hidden />
+            {t("logout")}
+          </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

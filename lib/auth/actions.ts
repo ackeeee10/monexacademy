@@ -180,7 +180,8 @@ export async function signInWithGoogle(next?: string): Promise<ActionResult> {
 
 export async function signOut(): Promise<void> {
   const supabase = await createClient();
-  await supabase.auth.signOut();
+  // Only this device; "global" would also sign out the user's other devices.
+  await supabase.auth.signOut({ scope: "local" });
   const locale = await getLocale();
   redirect({ href: "/", locale });
 }
