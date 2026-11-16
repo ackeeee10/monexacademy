@@ -1,3 +1,4 @@
+-- SUPERSEDED by 20261117000004_admin_no_second_step.sql. Do not run; kept as history.
 -- =============================================================================
 -- MONEX Academy — owner decision 16. 11. 2026: 2FA is optional for the admin
 -- for now (Master Prompt 4.3 asks for it to be mandatory; to be turned back on

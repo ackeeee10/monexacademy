@@ -156,7 +156,7 @@
     "launchPlanTooShort": "Add at least three steps to the launch plan.",
     "skillsRequired": "Pick at least one skill this idea needs.",
     "tooShort": "This is too short.",
-    "notAdmin": "This action needs an admin account confirmed with an email code.",
+    "notAdmin": "This action needs an admin account.",
     "noteRequired": "Add a short reason. It's shown to the person or kept in the audit log.",
     "noteTooLong": "Keep the note under 1,000 characters.",
     "invalidState": "This item has already changed. Refresh the page and try again.",
@@ -170,10 +170,7 @@
     "notFound": "This item no longer exists.",
     "targetNotFound": "This content is no longer available.",
     "cannotReportSelf": "You can't report your own content.",
-    "notRequired": "No age confirmation is needed for this account.",
-    "emailNotConfigured": "Email sending isn't set up yet. A setting is missing in Netlify.",
-    "emailNotSent": "We couldn't send the email.",
-    "codeExpired": "This code has expired or was used too many times. Send a new one."
+    "notRequired": "No age confirmation is needed for this account."
   },
   "Auth": {
     "or": "or",
@@ -796,16 +793,6 @@
       "target": "Target",
       "details": "Details"
     },
-    "gate": {
-      "title": "Confirm it's you",
-      "body": "For extra safety, the admin panel needs a code we email to {email}. You only do this once per login.",
-      "send": "Send code",
-      "sent": "We sent a 6-digit code to {email}. It expires in 10 minutes.",
-      "code": "Code from the email",
-      "verify": "Confirm",
-      "resend": "Send a new code",
-      "resendIn": "New code in {seconds}s",
-      "spam": "Can't find it? Check your spam folder."
-    }
+    "mfaRelogin": "Your account has an authenticator app turned on, but this session hasn't passed it. Log out and log in again with your code."
   }
 }

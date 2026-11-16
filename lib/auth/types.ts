@@ -40,10 +40,6 @@ export type AuthErrorKey =
   | "targetNotFound"
   | "cannotReportSelf"
   | "notRequired"
-  | "emailNotConfigured"
-  | "emailNotSent"
-  | "codeExpired"
-  | "codeInvalid"
   | "unexpected";
 
 export type ActionResult<T = undefined> =

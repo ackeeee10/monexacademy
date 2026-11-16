@@ -4,9 +4,7 @@ import type { ReactNode } from "react";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { getAccount } from "@/lib/auth/account";
 
-import { EmailCodeGate } from "./email-code-gate";
 
 /** Page heading used by every admin screen. */
 export function AdminHeading({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
@@ -21,13 +19,13 @@ export function AdminHeading({ title, subtitle, children }: { title: string; sub
   );
 }
 
-/** Shown to an admin whose login hasn't been confirmed with an email code yet. */
+/**
+ * Shown only if the admin turned on an authenticator app but this session
+ * hasn't passed it (normally the login flow asks for the code first).
+ */
 export async function MfaRequired() {
-  const account = await getAccount();
-  const email = account?.email ?? "";
-  const [name, domain] = email.split("@");
-  const masked = name && domain ? `${name.slice(0, 2)}${"•".repeat(Math.max(1, name.length - 2))}@${domain}` : email;
-  return <EmailCodeGate maskedEmail={masked} />;
+  const t = await getTranslations("Admin");
+  return <Alert variant="info">{t("mfaRelogin")}</Alert>;
 }
 
 export async function LoadError() {

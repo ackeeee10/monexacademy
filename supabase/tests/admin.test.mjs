@@ -2,7 +2,8 @@
 // Usage (as a non-root user, outside the app): npm i embedded-postgres@17 pg, then
 //   node admin.test.mjs <accounts.sql> <ideas.sql> <admin.sql> <seed.sql> <seed-ideas.sql> <empty-data-dir> \
 //     <admin_mfa_optional.sql> <admin_email_code.sql>
-// (the last two are the follow-up migrations, applied in order, as in production)
+// Follow-up migrations are applied in the given order. Production chain today:
+//   ... <empty-data-dir> 20261117000004_admin_no_second_step.sql
 import EmbeddedPostgres from "embedded-postgres";
 import pg from "pg";
 import fs from "node:fs";
@@ -33,6 +34,7 @@ await c.query(fs.readFileSync(seedIdeasPath, "utf8"));
 await c.query(fs.readFileSync(adminPath, "utf8"));
 for (const f of followUps) await c.query(fs.readFileSync(f, "utf8"));
 const EMAIL_CODE = followUps.some((f) => f.includes("admin_email_code"));
+const NO_SECOND_STEP = followUps.some((f) => f.includes("admin_no_second_step"));
 const enableMfa = async (uid) => { await owner(); await c.query("insert into auth.mfa_factors (user_id, status) values ($1,'verified')", [uid]); };
 
 let pass = 0, fail = 0;
@@ -105,10 +107,11 @@ await t("non-admin cannot call admin functions", async () => {
   await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
   await expectErr(() => c.query("select public.admin_list_users(null,'all',10,0)"), "not_admin");
 });
-await t("admin without any second step is refused", async () => {
+await t("admin without a second step: allowed only in no-second-step mode", async () => {
   const a = await makeAdmin("boss0");
   await as("authenticated", a, "aal1");
-  await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
+  if (NO_SECOND_STEP) await c.query("select public.admin_overview()");
+  else await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
 });
 await t("admin with 2FA turned on is refused until the session passes it", async () => {
   const a = await makeAdmin("boss1");
@@ -347,7 +350,7 @@ await t("users cannot change age_check_required or trust_manual themselves", asy
 });
 
 
-if (EMAIL_CODE) {
+if (EMAIL_CODE && !NO_SECOND_STEP) {
   const issue = async (uid, session = SESSION_A) => {
     await as("service_role", null);
     return (await c.query("select public.issue_admin_email_code($1,$2) code", [uid, session])).rows[0].code;
@@ -401,13 +404,14 @@ if (EMAIL_CODE) {
     await as("service_role", null);
     await expectErr(() => c.query("select public.issue_admin_email_code($1,$2)", [a, SESSION_A]), "rate_limited");
   });
-  await t("internal helpers are not callable by users", async () => {
-    const u = await makeUser("mail7");
-    await as("authenticated", u);
-    await expectErr(() => c.query("select public.log_action('x.y','t',null,'{}')"), "permission denied");
-    await expectErr(() => c.query("select public.refresh_trust_level($1)", [u]), "permission denied");
-  });
 }
+
+await t("internal helpers are not callable by users", async () => {
+  const u = await makeUser("mail7");
+  await as("authenticated", u);
+  await expectErr(() => c.query("select public.log_action('x.y','t',null,'{}')"), "permission denied");
+  await expectErr(() => c.query("select public.refresh_trust_level($1)", [u]), "permission denied");
+});
 
 console.log(`\n${pass} passed, ${fail} failed`);
 await c.end();

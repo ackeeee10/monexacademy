@@ -1,3 +1,4 @@
+-- SUPERSEDED by 20261117000004_admin_no_second_step.sql. Do not run; kept as history.
 -- =============================================================================
 -- MONEX Academy — owner decision 16. 11. 2026: admin two-step check by EMAIL CODE
 -- (simpler than an authenticator app). Replaces 20261117000002_admin_mfa_optional.
