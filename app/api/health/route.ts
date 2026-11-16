@@ -15,6 +15,8 @@ export function GET() {
         NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: has(process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY),
         SUPABASE_SECRET_KEY: has(process.env.SUPABASE_SECRET_KEY),
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: has(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY),
+        RESEND_API_KEY: has(process.env.RESEND_API_KEY),
+        EMAIL_FROM: has(process.env.EMAIL_FROM),
       },
     },
     { headers: { "Cache-Control": "no-store" } },

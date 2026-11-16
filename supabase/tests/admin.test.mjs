@@ -1,11 +1,13 @@
 // Security and behaviour tests for the admin migration, run against a throwaway local Postgres 17.
 // Usage (as a non-root user, outside the app): npm i embedded-postgres@17 pg, then
-//   node admin.test.mjs <accounts.sql> <ideas.sql> <admin.sql> <seed.sql> <seed-ideas.sql> <empty-data-dir>
+//   node admin.test.mjs <accounts.sql> <ideas.sql> <admin.sql> <seed.sql> <seed-ideas.sql> <empty-data-dir> \
+//     <admin_mfa_optional.sql> <admin_email_code.sql>
+// (the last two are the follow-up migrations, applied in order, as in production)
 import EmbeddedPostgres from "embedded-postgres";
 import pg from "pg";
 import fs from "node:fs";
 
-const [,, accountsPath, ideasPath, adminPath, seedPath, seedIdeasPath, dataDir, mfaOptionalPath] = process.argv;
+const [,, accountsPath, ideasPath, adminPath, seedPath, seedIdeasPath, dataDir, ...followUps] = process.argv;
 const db = new EmbeddedPostgres({ databaseDir: dataDir, user: "postgres", password: "pw", port: 54331, persistent: false });
 await db.initialise();
 await db.start();
@@ -13,7 +15,7 @@ const c = new pg.Client({ host: "localhost", port: 54331, user: "postgres", pass
 await c.connect();
 
 await c.query(`
-create role anon nologin; create role authenticated nologin;
+create role anon nologin; create role authenticated nologin; create role service_role nologin;
 create schema auth;
 create table auth.users (id uuid primary key default gen_random_uuid(), email text, encrypted_password text,
   raw_user_meta_data jsonb default '{}', banned_until timestamptz);
@@ -29,8 +31,8 @@ await c.query(fs.readFileSync(seedPath, "utf8"));
 await c.query(fs.readFileSync(ideasPath, "utf8"));
 await c.query(fs.readFileSync(seedIdeasPath, "utf8"));
 await c.query(fs.readFileSync(adminPath, "utf8"));
-if (mfaOptionalPath) await c.query(fs.readFileSync(mfaOptionalPath, "utf8"));
-const MFA_OPTIONAL = Boolean(mfaOptionalPath);
+for (const f of followUps) await c.query(fs.readFileSync(f, "utf8"));
+const EMAIL_CODE = followUps.some((f) => f.includes("admin_email_code"));
 const enableMfa = async (uid) => { await owner(); await c.query("insert into auth.mfa_factors (user_id, status) values ($1,'verified')", [uid]); };
 
 let pass = 0, fail = 0;
@@ -49,11 +51,13 @@ async function expectErr(fn, msg) {
   await c.query("rollback to savepoint e");
   throw new Error(`expected error "${msg}"`);
 }
-const as = async (role, uid, aal = "aal1") => {
+const SESSION_A = "11111111-1111-4111-8111-111111111111";
+const SESSION_B = "22222222-2222-4222-8222-222222222222";
+const as = async (role, uid, aal = "aal1", session = SESSION_A) => {
   await c.query("reset role");
   await c.query(`set local role ${role}`);
   await c.query(`select set_config('request.jwt.claim.sub', $1, true)`, [uid ?? ""]);
-  await c.query(`select set_config('request.jwt.claims', $1, true)`, [JSON.stringify({ sub: uid ?? null, aal })]);
+  await c.query(`select set_config('request.jwt.claims', $1, true)`, [JSON.stringify({ sub: uid ?? null, aal, session_id: session })]);
 };
 const owner = () => c.query("reset role");
 const newUser = async () => {
@@ -101,11 +105,10 @@ await t("non-admin cannot call admin functions", async () => {
   await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
   await expectErr(() => c.query("select public.admin_list_users(null,'all',10,0)"), "not_admin");
 });
-await t("admin without 2FA set up: allowed only when 2FA is optional", async () => {
+await t("admin without any second step is refused", async () => {
   const a = await makeAdmin("boss0");
   await as("authenticated", a, "aal1");
-  if (MFA_OPTIONAL) await c.query("select public.admin_overview()");
-  else await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
+  await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
 });
 await t("admin with 2FA turned on is refused until the session passes it", async () => {
   const a = await makeAdmin("boss1");
@@ -342,6 +345,69 @@ await t("users cannot change age_check_required or trust_manual themselves", asy
   await expectErr(() => c.query("update public.profiles set age_check_required=false where id=$1", [u]), "permission denied");
   await expectErr(() => c.query("update public.profiles set trust_manual=true where id=$1", [u]), "permission denied");
 });
+
+
+if (EMAIL_CODE) {
+  const issue = async (uid, session = SESSION_A) => {
+    await as("service_role", null);
+    return (await c.query("select public.issue_admin_email_code($1,$2) code", [uid, session])).rows[0].code;
+  };
+  const verify = async (code) => (await c.query("select public.verify_admin_email_code($1) r", [code])).rows[0].r;
+
+  await t("email code: correct code verifies only this session", async () => {
+    const a = await makeAdmin("mail1");
+    const code = await issue(a);
+    if (!/^\d{6}$/.test(code)) throw new Error("bad code " + code);
+    await as("authenticated", a, "aal1", SESSION_A);
+    await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
+    if ((await verify(code)) !== "ok") throw new Error("not ok");
+    await c.query("select public.admin_overview()");
+    if ((await verify(code)) !== "expired") throw new Error("code reusable");
+    await as("authenticated", a, "aal1", SESSION_B);
+    await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
+  });
+  await t("email code: wrong codes are counted; 5 wrong attempts burn the code", async () => {
+    const a = await makeAdmin("mail2");
+    const code = await issue(a);
+    const wrong = code === "000000" ? "111111" : "000000";
+    await as("authenticated", a);
+    for (let i = 0; i < 5; i++) if ((await verify(wrong)) !== "incorrect") throw new Error("attempt " + i);
+    if ((await verify(code)) !== "expired") throw new Error("not burned");
+  });
+  await t("email code: only the newest code works; expired codes fail", async () => {
+    const a = await makeAdmin("mail3");
+    const first = await issue(a);
+    const second = await issue(a);
+    await as("authenticated", a);
+    if (first !== second && (await verify(first)) === "ok") throw new Error("old code worked");
+    await owner();
+    await c.query("update public.admin_email_codes set expires_at = now() - interval '1 minute' where user_id=$1", [a]);
+    await as("authenticated", a);
+    if ((await verify(second)) !== "expired") throw new Error("expired code worked");
+  });
+  await t("email code: users and anon cannot issue codes; non-admins get none", async () => {
+    const a = await makeAdmin("mail4");
+    const u = await makeUser("mail5");
+    await as("authenticated", a);
+    await expectErr(() => c.query("select public.issue_admin_email_code($1,$2)", [a, SESSION_A]), "permission denied");
+    await as("anon");
+    await expectErr(() => c.query("select public.issue_admin_email_code($1,$2)", [a, SESSION_A]), "permission denied");
+    await as("service_role", null);
+    await expectErr(() => c.query("select public.issue_admin_email_code($1,$2)", [u, SESSION_A]), "not_admin");
+  });
+  await t("email code: at most 5 codes per 15 minutes", async () => {
+    const a = await makeAdmin("mail6");
+    for (let i = 0; i < 5; i++) await issue(a);
+    await as("service_role", null);
+    await expectErr(() => c.query("select public.issue_admin_email_code($1,$2)", [a, SESSION_A]), "rate_limited");
+  });
+  await t("internal helpers are not callable by users", async () => {
+    const u = await makeUser("mail7");
+    await as("authenticated", u);
+    await expectErr(() => c.query("select public.log_action('x.y','t',null,'{}')"), "permission denied");
+    await expectErr(() => c.query("select public.refresh_trust_level($1)", [u]), "permission denied");
+  });
+}
 
 console.log(`\n${pass} passed, ${fail} failed`);
 await c.end();

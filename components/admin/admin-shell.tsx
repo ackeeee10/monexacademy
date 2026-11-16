@@ -1,10 +1,12 @@
-import { ShieldAlert } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
+import { getAccount } from "@/lib/auth/account";
+
+import { EmailCodeGate } from "./email-code-gate";
 
 /** Page heading used by every admin screen. */
 export function AdminHeading({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
@@ -19,21 +21,13 @@ export function AdminHeading({ title, subtitle, children }: { title: string; sub
   );
 }
 
-/** Shown to an admin whose session hasn't passed 2FA. */
+/** Shown to an admin whose login hasn't been confirmed with an email code yet. */
 export async function MfaRequired() {
-  const t = await getTranslations("Admin");
-  return (
-    <div className="max-w-xl space-y-5 rounded-lg border border-border bg-surface p-8">
-      <span className="flex size-11 items-center justify-center rounded-full border border-accent/40 bg-accent/10 text-accent">
-        <ShieldAlert className="size-5" aria-hidden />
-      </span>
-      <h2 className="text-xl font-semibold text-text">{t("mfaTitle")}</h2>
-      <p className="text-sm leading-relaxed text-muted">{t("mfaBody")}</p>
-      <Button asChild>
-        <Link href="/settings/security">{t("mfaAction")}</Link>
-      </Button>
-    </div>
-  );
+  const account = await getAccount();
+  const email = account?.email ?? "";
+  const [name, domain] = email.split("@");
+  const masked = name && domain ? `${name.slice(0, 2)}${"•".repeat(Math.max(1, name.length - 2))}@${domain}` : email;
+  return <EmailCodeGate maskedEmail={masked} />;
 }
 
 export async function LoadError() {
