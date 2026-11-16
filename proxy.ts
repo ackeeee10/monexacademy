@@ -7,7 +7,7 @@ import { updateSession } from "./lib/supabase/proxy";
 const handleI18nRouting = createMiddleware(routing);
 
 /** Paths that need a signed-in user (without locale prefix). */
-const PROTECTED_PREFIXES = ["/dashboard", "/settings", "/onboarding", "/verify-2fa", "/update-password"];
+const PROTECTED_PREFIXES = ["/dashboard", "/settings", "/onboarding", "/verify-2fa", "/update-password", "/create"];
 /** Paths a signed-in user doesn't need. */
 const GUEST_ONLY = ["/login", "/signup"];
 

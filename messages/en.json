@@ -145,7 +145,14 @@
     "numberInvalid": "Enter a number between 0 and 80.",
     "unexpected": "Something went wrong. Please try again.",
     "googleUnavailable": "Google sign-in isn't available yet. Please use your email instead.",
-    "noAccount": "There's no account with this email yet. Create an account first."
+    "noAccount": "There's no account with this email yet. Create an account first.",
+    "ideaNotFound": "We couldn't find this idea. It may have been removed or you may not have access.",
+    "ideaLocked": "Approved ideas can't be edited yet. Editing approved ideas comes in a later update.",
+    "profileNotReady": "Finish setting up your profile before posting an idea.",
+    "earningsInvalid": "The maximum must be the same as or higher than the minimum.",
+    "launchPlanTooShort": "Add at least three steps to the launch plan.",
+    "skillsRequired": "Pick at least one skill this idea needs.",
+    "tooShort": "This is too short."
   },
   "Auth": {
     "or": "or",
@@ -298,6 +305,24 @@
       "partner": "A partner",
       "job": "Work or a project",
       "idea": "A business idea"
+    },
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "timeToIncome": {
+      "lt_1w": "Less than 1 week",
+      "1_4w": "1–4 weeks",
+      "1_3m": "1–3 months",
+      "3_6m": "3–6 months",
+      "6m_plus": "6+ months"
+    },
+    "sort": {
+      "newest": "Newest",
+      "earning": "Highest earning potential",
+      "lowest_investment": "Lowest investment",
+      "most_saved": "Most saved"
     }
   },
   "Dashboard": {
@@ -419,5 +444,143 @@
     },
     "empty": "This user hasn't added details yet.",
     "edit": "Edit profile"
+  },
+  "Ideas": {
+    "title": "Business ideas",
+    "subtitle": "Find a business with real numbers: what it costs, what it can earn and how long until the first income.",
+    "searchPlaceholder": "Search by name, skill or keyword",
+    "search": "Search",
+    "filters": "Filters",
+    "apply": "Apply",
+    "reset": "Reset",
+    "any": "Any",
+    "filter": {
+      "budget": "Budget up to",
+      "category": "Category",
+      "difficulty": "Difficulty",
+      "time": "Time to first income",
+      "mode": "Where",
+      "team": "Who",
+      "minEarning": "Earning potential from",
+      "sort": "Sort by"
+    },
+    "modeLabels": {
+      "online": "Online",
+      "irl": "In person",
+      "both": "Hybrid"
+    },
+    "teamLabels": {
+      "solo": "Solo",
+      "team": "With a team"
+    },
+    "count": "{count, plural, one {# idea} other {# ideas}}",
+    "empty": "No ideas match these filters yet. Try widening the budget or clearing a filter.",
+    "pagePrev": "Previous",
+    "pageNext": "Next",
+    "pageOf": "Page {page} of {total}",
+    "monexOriginal": "MONEX Original",
+    "featured": "Featured",
+    "saves": "{count, plural, one {# save} other {# saves}}",
+    "earningPerMonth": "{min}–{max} / month",
+    "byAuthor": "By {name}",
+    "byMonex": "By MONEX Academy",
+    "labels": {
+      "investment": "Start-up cost",
+      "earnings": "Potential earnings",
+      "difficulty": "Difficulty",
+      "time": "Time to first income",
+      "where": "Where",
+      "who": "Who",
+      "skills": "Skills you need",
+      "lookingFor": "Looking for",
+      "category": "Category"
+    },
+    "estimateNote": "Earnings are the author's estimates, not guarantees. Check the numbers against your own situation before you start.",
+    "back": "All ideas",
+    "detail": {
+      "save": "Save",
+      "saved": "Saved",
+      "signInToSave": "Sign in to save this idea",
+      "edit": "Edit idea",
+      "unavailable": "This idea is not available.",
+      "lockedTitle": "Full plan is locked",
+      "lockedBody": "The launch plan, market analysis, risks and checklist unlock with credits.",
+      "unlock": "Unlock with credits",
+      "unlockLater": "Credits arrive in a later update",
+      "launchPlan": "Launch plan",
+      "marketAnalysis": "Market and competition",
+      "risks": "Risks",
+      "checklist": "Checklist",
+      "noContent": "The author hasn't added this yet.",
+      "reviewerNote": "Note from the reviewer"
+    },
+    "status": {
+      "draft": "Draft. Only you can see this idea.",
+      "pending": "Waiting for review. Only you can see this idea until it's approved.",
+      "approved": "Published",
+      "rejected": "Not approved. See the reviewer's note.",
+      "changes_requested": "Changes requested. Edit the idea and submit it again.",
+      "hidden": "Hidden from the site."
+    },
+    "create": {
+      "title": "Post an idea",
+      "editTitle": "Edit your idea",
+      "subtitle": "Share the numbers, the plan and the risks. Other people use this to decide what to start.",
+      "stepOf": "Step {current} of {total}",
+      "steps": {
+        "basics": "Basics",
+        "numbers": "Numbers",
+        "how": "How it works",
+        "plan": "Plan and risks",
+        "review": "Review"
+      },
+      "fields": {
+        "title": "Name",
+        "titleHint": "3–90 characters. Describe the business, not the outcome.",
+        "shortDescription": "Short description",
+        "shortDescriptionHint": "10–280 characters. What it is and who it's for.",
+        "category": "Category",
+        "investment": "Start-up cost",
+        "investmentHint": "Roughly how much you need before the first sale.",
+        "earningMin": "Potential monthly earnings, minimum (USD)",
+        "earningMax": "Potential monthly earnings, maximum (USD)",
+        "earningHint": "Your estimate. Shown as a range on the idea.",
+        "difficulty": "Difficulty",
+        "timeToIncome": "Time to first income",
+        "workMode": "Where it happens",
+        "teamMode": "Who it needs",
+        "skills": "Skills you need",
+        "skillsHint": "Pick up to 30.",
+        "lookingForRoles": "Roles you're looking for (optional)",
+        "lookingForRolesHint": "Short labels like Developer or Marketer. Press Enter after each one.",
+        "launchPlan": "Launch plan",
+        "launchPlanHint": "One step per line, in order. At least three steps, up to twenty.",
+        "marketAnalysis": "Market and competition (optional)",
+        "risks": "Risks (optional)"
+      },
+      "placeholders": {
+        "title": "e.g. Freelance copywriting for local shops",
+        "shortDescription": "What the business does and who buys it.",
+        "roleInput": "Add a role",
+        "planStep": "Describe one step",
+        "marketAnalysis": "Who else sells this, and how is your offer different?",
+        "risks": "What could go wrong, and how much would it cost?"
+      },
+      "addStep": "Add step",
+      "removeStep": "Remove",
+      "addRole": "Add",
+      "next": "Continue",
+      "back": "Back",
+      "saveDraft": "Save draft",
+      "submit": "Submit for review",
+      "saving": "Saving…",
+      "draftSaved": "Draft saved.",
+      "submitted": "Thanks. Your idea is in the review queue.",
+      "published": "Your idea is live.",
+      "reviewIntro": "Check the details below. Submitting sends the idea for review. Trusted authors are published straight away.",
+      "unexpected": "Something went wrong while saving. Your changes are still on this page. Please try again.",
+      "cancel": "Cancel"
+    },
+    "notFound": "Idea not found"
   }
 }

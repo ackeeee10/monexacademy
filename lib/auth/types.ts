@@ -20,6 +20,12 @@ export type AuthErrorKey =
   | "confirmationMismatch"
   | "googleUnavailable"
   | "noAccount"
+  | "ideaNotFound"
+  | "ideaLocked"
+  | "profileNotReady"
+  | "earningsInvalid"
+  | "launchPlanTooShort"
+  | "skillsRequired"
   | "unexpected";
 
 export type ActionResult<T = undefined> =
