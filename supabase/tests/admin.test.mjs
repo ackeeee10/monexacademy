@@ -5,7 +5,7 @@ import EmbeddedPostgres from "embedded-postgres";
 import pg from "pg";
 import fs from "node:fs";
 
-const [,, accountsPath, ideasPath, adminPath, seedPath, seedIdeasPath, dataDir] = process.argv;
+const [,, accountsPath, ideasPath, adminPath, seedPath, seedIdeasPath, dataDir, mfaOptionalPath] = process.argv;
 const db = new EmbeddedPostgres({ databaseDir: dataDir, user: "postgres", password: "pw", port: 54331, persistent: false });
 await db.initialise();
 await db.start();
@@ -17,6 +17,7 @@ create role anon nologin; create role authenticated nologin;
 create schema auth;
 create table auth.users (id uuid primary key default gen_random_uuid(), email text, encrypted_password text,
   raw_user_meta_data jsonb default '{}', banned_until timestamptz);
+create table auth.mfa_factors (id uuid primary key default gen_random_uuid(), user_id uuid, status text);
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
 create function auth.jwt() returns jsonb language sql stable as $$ select coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb $$;
 grant usage on schema auth to anon, authenticated;
@@ -28,6 +29,9 @@ await c.query(fs.readFileSync(seedPath, "utf8"));
 await c.query(fs.readFileSync(ideasPath, "utf8"));
 await c.query(fs.readFileSync(seedIdeasPath, "utf8"));
 await c.query(fs.readFileSync(adminPath, "utf8"));
+if (mfaOptionalPath) await c.query(fs.readFileSync(mfaOptionalPath, "utf8"));
+const MFA_OPTIONAL = Boolean(mfaOptionalPath);
+const enableMfa = async (uid) => { await owner(); await c.query("insert into auth.mfa_factors (user_id, status) values ($1,'verified')", [uid]); };
 
 let pass = 0, fail = 0;
 async function t(name, fn) {
@@ -97,8 +101,15 @@ await t("non-admin cannot call admin functions", async () => {
   await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
   await expectErr(() => c.query("select public.admin_list_users(null,'all',10,0)"), "not_admin");
 });
-await t("admin without 2FA session is refused", async () => {
+await t("admin without 2FA set up: allowed only when 2FA is optional", async () => {
+  const a = await makeAdmin("boss0");
+  await as("authenticated", a, "aal1");
+  if (MFA_OPTIONAL) await c.query("select public.admin_overview()");
+  else await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
+});
+await t("admin with 2FA turned on is refused until the session passes it", async () => {
   const a = await makeAdmin("boss1");
+  await enableMfa(a);
   await as("authenticated", a, "aal1");
   await expectErr(() => c.query("select public.admin_overview()"), "not_admin");
   await as("authenticated", a, "aal2");
@@ -130,6 +141,7 @@ await t("admin without 2FA cannot read others' pending ideas", async () => {
   const author = await makeUser("writer2");
   const id = await submitIdea(author, "Hidden pending");
   const a = await makeAdmin("boss3");
+  await enableMfa(a);
   await as("authenticated", a, "aal1");
   if ((await c.query("select id from public.ideas where id=$1", [id])).rows.length) throw new Error("visible");
   if ((await c.query("select public.get_idea_full($1) f", [id])).rows[0].f !== null) throw new Error("locked leaked");

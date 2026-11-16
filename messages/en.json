@@ -156,7 +156,7 @@
     "launchPlanTooShort": "Add at least three steps to the launch plan.",
     "skillsRequired": "Pick at least one skill this idea needs.",
     "tooShort": "This is too short.",
-    "notAdmin": "This action needs an admin account with two-factor authentication.",
+    "notAdmin": "This action needs an admin account.",
     "noteRequired": "Add a short reason. It's shown to the person or kept in the audit log.",
     "noteTooLong": "Keep the note under 1,000 characters.",
     "invalidState": "This item has already changed. Refresh the page and try again.",
@@ -641,7 +641,7 @@
       "audit": "Audit log"
     },
     "mfaTitle": "Two-factor authentication required",
-    "mfaBody": "The admin panel only opens in a session that passed two-factor authentication. Turn it on in Security settings, then come back.",
+    "mfaBody": "Your account has two-factor authentication turned on, but this session hasn't passed it. Log out and log in again with your authenticator code.",
     "mfaAction": "Open security settings",
     "loadError": "We couldn't load this data. Refresh the page; if it keeps happening, check that the Phase 4 migration has been run.",
     "empty": "Nothing here.",
