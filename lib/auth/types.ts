@@ -26,6 +26,20 @@ export type AuthErrorKey =
   | "earningsInvalid"
   | "launchPlanTooShort"
   | "skillsRequired"
+  | "notAdmin"
+  | "noteRequired"
+  | "noteTooLong"
+  | "invalidState"
+  | "cannotTargetSelf"
+  | "cannotTargetAdmin"
+  | "userNotFound"
+  | "reportNotFound"
+  | "slugTaken"
+  | "inUse"
+  | "notFound"
+  | "targetNotFound"
+  | "cannotReportSelf"
+  | "notRequired"
   | "unexpected";
 
 export type ActionResult<T = undefined> =

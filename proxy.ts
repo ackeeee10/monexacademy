@@ -7,7 +7,7 @@ import { updateSession } from "./lib/supabase/proxy";
 const handleI18nRouting = createMiddleware(routing);
 
 /** Paths that need a signed-in user (without locale prefix). */
-const PROTECTED_PREFIXES = ["/dashboard", "/settings", "/onboarding", "/verify-2fa", "/update-password", "/create"];
+const PROTECTED_PREFIXES = ["/dashboard", "/settings", "/onboarding", "/verify-2fa", "/update-password", "/create", "/admin", "/confirm-age"];
 /** Paths a signed-in user doesn't need. */
 const GUEST_ONLY = ["/login", "/signup"];
 
@@ -30,7 +30,12 @@ export default async function proxy(request: NextRequest) {
   if (!userId && matches(path, PROTECTED_PREFIXES)) {
     redirectTo = new URL("/login", request.url);
     redirectTo.searchParams.set("next", path + request.nextUrl.search);
-  } else if (userId && matches(path, GUEST_ONLY) && !request.nextUrl.searchParams.has("deleted")) {
+  } else if (
+    userId &&
+    matches(path, GUEST_ONLY) &&
+    !request.nextUrl.searchParams.has("deleted") &&
+    !request.nextUrl.searchParams.has("blocked")
+  ) {
     redirectTo = new URL("/dashboard", request.url);
   }
 

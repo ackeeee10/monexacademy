@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { IdeaFacts } from "@/components/ideas/idea-facts";
 import { LockedContent } from "@/components/ideas/locked-content";
 import { SaveButton } from "@/components/ideas/save-button";
+import { ReportButton } from "@/components/reports/report-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -89,8 +90,11 @@ async function IdeaDetail({ params }: { params: Props["params"] }) {
         </Alert>
       )}
 
-      <div className="mt-8 flex flex-wrap items-center gap-3">
+      <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
         {!isAuthor && <SaveButton ideaId={idea.id} initialSaved={saved} signedIn={account !== null} returnPath={`/ideas/${idea.slug}`} />}
+        {!isAuthor && idea.status === "approved" && (
+          <ReportButton targetType="idea" targetId={idea.id} signedIn={account !== null} returnPath={`/ideas/${idea.slug}`} />
+        )}
         {canEdit && (
           <Button asChild variant="secondary">
             <Link href={`/create/idea?id=${idea.id}`}>

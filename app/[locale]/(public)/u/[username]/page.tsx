@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ReportButton } from "@/components/reports/report-button";
 import { Link } from "@/i18n/navigation";
 import { getPublicProfile, type PublicProfile } from "@/lib/account/queries";
 import { getUserId } from "@/lib/auth/account";
@@ -91,7 +92,7 @@ async function Profile({ params }: { params: Props["params"] }) {
               </ul>
             </div>
             <Suspense fallback={null}>
-              <OwnerActions profileId={profile.id} />
+              <OwnerActions profileId={profile.id} username={profile.username} />
             </Suspense>
           </div>
           {profile.lookingFor.length > 0 && (
@@ -185,9 +186,15 @@ async function Profile({ params }: { params: Props["params"] }) {
 }
 
 /** "Edit profile" for the owner only. Reads the session, so it streams separately. */
-async function OwnerActions({ profileId }: { profileId: string }) {
+async function OwnerActions({ profileId, username }: { profileId: string; username: string }) {
   const userId = await getUserId();
-  if (userId !== profileId) return null;
+  if (userId !== profileId) {
+    return (
+      <div className="self-start">
+        <ReportButton targetType="profile" targetId={profileId} signedIn={userId !== null} returnPath={`/u/${username}`} />
+      </div>
+    );
+  }
   const t = await getTranslations("Profile");
   return (
     <Button asChild variant="secondary" size="sm" className="self-start">

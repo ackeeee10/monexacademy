@@ -28,7 +28,8 @@
     "settings": "Settings",
     "profile": "View profile",
     "logout": "Log out",
-    "account": "Account menu"
+    "account": "Account menu",
+    "admin": "Admin"
   },
   "Theme": {
     "toggle": "Switch color theme",
@@ -109,7 +110,9 @@
     "settingsPreferences": "Preferences",
     "settingsAccount": "Account",
     "settingsSecurity": "Security",
-    "settingsPrivacy": "Privacy & data"
+    "settingsPrivacy": "Privacy & data",
+    "admin": "Admin",
+    "confirmAge": "Confirm your age"
   },
   "Errors": {
     "invalidInput": "Please check the highlighted fields.",
@@ -152,7 +155,22 @@
     "earningsInvalid": "The maximum must be the same as or higher than the minimum.",
     "launchPlanTooShort": "Add at least three steps to the launch plan.",
     "skillsRequired": "Pick at least one skill this idea needs.",
-    "tooShort": "This is too short."
+    "tooShort": "This is too short.",
+    "notAdmin": "This action needs an admin account with two-factor authentication.",
+    "noteRequired": "Add a short reason. It's shown to the person or kept in the audit log.",
+    "noteTooLong": "Keep the note under 1,000 characters.",
+    "invalidState": "This item has already changed. Refresh the page and try again.",
+    "cannotTargetSelf": "You can't do this to your own account.",
+    "cannotTargetAdmin": "Admin accounts can't be changed here.",
+    "userNotFound": "We couldn't find this user.",
+    "reportNotFound": "We couldn't find this report.",
+    "slugTaken": "This slug is already in use. Choose another one.",
+    "slugInvalid": "Use 2–60 lowercase letters, numbers and hyphens.",
+    "inUse": "This is still in use, so it can't be deleted. Rename it instead.",
+    "notFound": "This item no longer exists.",
+    "targetNotFound": "This content is no longer available.",
+    "cannotReportSelf": "You can't report your own content.",
+    "notRequired": "No age confirmation is needed for this account."
   },
   "Auth": {
     "or": "or",
@@ -182,7 +200,8 @@
       "noAccount": "New to MONEX Academy?",
       "signupLink": "Create an account",
       "deleted": "Your account is scheduled for deletion and is now hidden. Log in within 30 days to restore it.",
-      "linkExpired": "That link has expired or was already used. Please log in or request a new link."
+      "linkExpired": "That link has expired or was already used. Please log in or request a new link.",
+      "blocked": "This account has been blocked. Contact support if you think this is a mistake."
     },
     "signup": {
       "title": "Create your account",
@@ -582,5 +601,200 @@
       "cancel": "Cancel"
     },
     "notFound": "Idea not found"
+  },
+  "Report": {
+    "button": "Report",
+    "title": "Report this content",
+    "body": "Tell us what's wrong. Reports are private and reviewed by our team.",
+    "reason": "Reason",
+    "details": "Details (optional)",
+    "detailsHint": "Up to 1,000 characters. Links or examples help us review faster.",
+    "submit": "Send report",
+    "cancel": "Cancel",
+    "sent": "Thanks. Our team will review this report.",
+    "signIn": "Sign in to report",
+    "reasons": {
+      "spam": "Spam or misleading",
+      "scam": "Scam or fraud",
+      "prohibited": "Prohibited business (MLM, gambling, crypto, adult, illegal)",
+      "inappropriate": "Offensive or inappropriate",
+      "copyright": "Stolen idea or content",
+      "suspected_minor": "Person may be under 18",
+      "other": "Something else"
+    }
+  },
+  "ConfirmAge": {
+    "title": "Please confirm your age",
+    "body": "MONEX Academy is for adults only. Your account is hidden until you confirm your date of birth.",
+    "birthDate": "Date of birth",
+    "submit": "Confirm",
+    "note": "Giving a false date of birth breaks our Terms and can lead to the account being blocked."
+  },
+  "Admin": {
+    "title": "Admin",
+    "nav": {
+      "overview": "Overview",
+      "moderation": "Moderation",
+      "reports": "Reports",
+      "users": "Users",
+      "categories": "Categories & skills",
+      "audit": "Audit log"
+    },
+    "mfaTitle": "Two-factor authentication required",
+    "mfaBody": "The admin panel only opens in a session that passed two-factor authentication. Turn it on in Security settings, then come back.",
+    "mfaAction": "Open security settings",
+    "loadError": "We couldn't load this data. Refresh the page; if it keeps happening, check that the Phase 4 migration has been run.",
+    "empty": "Nothing here.",
+    "search": "Search",
+    "searchPlaceholder": "Search",
+    "total": "{count, plural, one {# item} other {# items}}",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "view": "Open",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…",
+    "done": "Saved.",
+    "overview": {
+      "pendingIdeas": "Ideas waiting for review",
+      "openReports": "Open reports",
+      "approvedIdeas": "Published ideas",
+      "users": "Active accounts",
+      "newUsers7d": "New accounts, last 7 days",
+      "blockedUsers": "Blocked accounts",
+      "ageChecks": "Waiting for age confirmation"
+    },
+    "ideaStatus": {
+      "pending": "Pending",
+      "changes_requested": "Changes requested",
+      "rejected": "Rejected",
+      "approved": "Approved",
+      "hidden": "Hidden"
+    },
+    "moderation": {
+      "title": "Moderation",
+      "subtitle": "Review submitted ideas. The oldest pending idea is at the top.",
+      "by": "By {name}",
+      "trusted": "Trusted author",
+      "reports": "{count, plural, one {# open report} other {# open reports}}",
+      "review": "Review",
+      "backToQueue": "Back to the queue",
+      "status": "Status",
+      "submitted": "Last updated {date}",
+      "note": "Note for the author",
+      "noteHint": "Required for Reject and Request changes. The author sees this note.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "request_changes": "Request changes",
+      "hide": "Hide from site",
+      "restore": "Restore",
+      "previousNote": "Current note",
+      "viewPublic": "View public page"
+    },
+    "reports": {
+      "title": "Reports",
+      "subtitle": "Reports from users about ideas and profiles.",
+      "status": {
+        "open": "Open",
+        "resolved": "Resolved",
+        "dismissed": "Dismissed"
+      },
+      "reportedBy": "Reported by {name}",
+      "targetIdea": "Idea",
+      "targetProfile": "Profile",
+      "targetGone": "The reported content no longer exists.",
+      "openTarget": "Open content",
+      "openOwner": "Open owner in Users",
+      "reviewIdea": "Review idea",
+      "note": "Resolution note (optional)",
+      "resolve": "Mark resolved",
+      "dismiss": "Dismiss",
+      "resolvedBy": "{status} by {name}",
+      "minorHint": "Suspected minor: open the owner in Users and turn on the age check if needed."
+    },
+    "users": {
+      "title": "Users",
+      "subtitle": "Find accounts, block abuse, and set trust levels.",
+      "filter": {
+        "all": "All",
+        "blocked": "Blocked",
+        "age_check": "Age check",
+        "deleted": "Scheduled for deletion",
+        "trusted": "Trusted",
+        "staff": "Staff"
+      },
+      "noUsername": "No username yet",
+      "joined": "Joined {date}",
+      "role": {
+        "user": "User",
+        "moderator": "Moderator",
+        "admin": "Admin"
+      },
+      "trust": {
+        "new": "New",
+        "trusted": "Trusted"
+      },
+      "blocked": "Blocked",
+      "ageCheck": "Age check",
+      "deleted": "Deletion scheduled",
+      "backToList": "All users",
+      "account": "Account",
+      "email": "Email",
+      "plan": "Plan",
+      "country": "Country",
+      "reports": "Reports about this user",
+      "reportsValue": "{open} open · {total} total",
+      "ideas": "Ideas",
+      "noIdeas": "No submitted ideas.",
+      "history": "Admin history",
+      "noHistory": "No admin actions yet.",
+      "actions": "Actions",
+      "reason": "Reason",
+      "reasonHint": "Required to block or start an age check. Saved in the audit log.",
+      "block": "Block account",
+      "unblock": "Unblock account",
+      "blockHelp": "Blocking hides the profile and all ideas, and stops the person from logging in.",
+      "trustLabel": "Trust level",
+      "trustHelp": "Trusted authors publish without review. Setting it here turns off automatic changes.",
+      "trustManual": "Set manually",
+      "roleLabel": "Role",
+      "roleHelp": "Moderators are not used yet. Admin can only be given in the database.",
+      "ageCheckOn": "Start age check",
+      "ageCheckOff": "Clear age check",
+      "ageHelp": "Hides the account until the person confirms they are 18 or older.",
+      "self": "This is your account. Admin accounts can't be changed here.",
+      "profile": "Public profile",
+      "joinedLabel": "Joined"
+    },
+    "taxonomy": {
+      "title": "Categories & skills",
+      "subtitle": "Used in idea forms, filters and profiles. Items in use can be renamed but not deleted.",
+      "categories": "Categories",
+      "skills": "Skills",
+      "name": "Name",
+      "slug": "Slug",
+      "sortOrder": "Order",
+      "usage": "Used by",
+      "usageCategory": "{ideas, plural, one {# idea} other {# ideas}}",
+      "usageSkill": "{ideas} ideas · {profiles} profiles",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete for good?",
+      "newCategory": "New category",
+      "newSkill": "New skill"
+    },
+    "audit": {
+      "title": "Audit log",
+      "subtitle": "Every admin action, newest first.",
+      "by": "by {name}",
+      "system": "system",
+      "when": "When",
+      "action": "Action",
+      "actor": "Who",
+      "target": "Target",
+      "details": "Details"
+    }
   }
 }

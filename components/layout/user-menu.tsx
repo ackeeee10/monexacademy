@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, LogOut, Settings, UserRound } from "lucide-react";
+import { LayoutDashboard, LogOut, Settings, ShieldCheck, UserRound } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
@@ -15,6 +15,7 @@ export type HeaderUser = {
   email: string;
   avatarUrl: string | null;
   plan: "free" | "pro" | "elite";
+  isAdmin: boolean;
 };
 
 const itemClass =
@@ -70,6 +71,14 @@ export function UserMenu({ user }: { user: HeaderUser }) {
               {t("settings")}
             </Link>
           </DropdownMenu.Item>
+          {user.isAdmin && (
+            <DropdownMenu.Item asChild className={itemClass}>
+              <Link href="/admin">
+                <ShieldCheck aria-hidden />
+                {t("admin")}
+              </Link>
+            </DropdownMenu.Item>
+          )}
           <DropdownMenu.Separator className="my-1 h-px bg-border" />
           {/* Not a <form>: the menu unmounts on select, before a form could submit. */}
           <DropdownMenu.Item

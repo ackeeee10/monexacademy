@@ -33,7 +33,9 @@ export function LoginForm() {
 
   const notice = params.get("deleted")
     ? t("login.deleted")
-    : params.get("error") === "link_expired"
+    : params.get("blocked")
+      ? t("login.blocked")
+      : params.get("error") === "link_expired"
       ? t("login.linkExpired")
       : null;
 

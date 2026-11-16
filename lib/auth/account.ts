@@ -23,6 +23,7 @@ export type Account = {
   role: "user" | "moderator" | "admin";
   plan: "free" | "pro" | "elite";
   isBlocked: boolean;
+  ageCheckRequired: boolean;
   deletedAt: string | null;
   onboardingCompleted: boolean;
   hasBirthDate: boolean;
@@ -49,6 +50,7 @@ function toAccount(raw: RawAccount): Account {
     role: (str(raw.role) as Account["role"]) ?? "user",
     plan: (str(raw.plan) as Account["plan"]) ?? "free",
     isBlocked: raw.is_blocked === true,
+    ageCheckRequired: raw.age_check_required === true,
     deletedAt: str(raw.deleted_at),
     onboardingCompleted: raw.onboarding_completed === true,
     hasBirthDate: raw.birth_date != null,
@@ -88,13 +90,19 @@ type RequireOptions = {
   next?: string;
   /** Allow accounts that haven't finished onboarding (the onboarding page itself). */
   allowIncompleteOnboarding?: boolean;
+  /** Allow accounts waiting for an age check (the confirm-age page itself). */
+  allowAgeCheck?: boolean;
 };
 
 /**
  * Guard for signed-in pages: redirects to login, 2FA verification or
  * onboarding as needed, then returns the account.
  */
-export async function requireAccount({ next, allowIncompleteOnboarding = false }: RequireOptions = {}): Promise<Account> {
+export async function requireAccount({
+  next,
+  allowIncompleteOnboarding = false,
+  allowAgeCheck = false,
+}: RequireOptions = {}): Promise<Account> {
   const locale = await getLocale();
   const account = await getAccount();
 
@@ -107,6 +115,12 @@ export async function requireAccount({ next, allowIncompleteOnboarding = false }
   }
   if (account.deletedAt) {
     return redirect({ href: "/login?deleted=1", locale });
+  }
+  if (account.isBlocked) {
+    return redirect({ href: "/login?blocked=1", locale });
+  }
+  if (account.ageCheckRequired && !allowAgeCheck) {
+    return redirect({ href: "/confirm-age", locale });
   }
   if (!account.onboardingCompleted && !allowIncompleteOnboarding) {
     return redirect({ href: "/onboarding", locale });

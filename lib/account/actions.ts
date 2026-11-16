@@ -8,6 +8,7 @@ import { redirect } from "@/i18n/navigation";
 import { getAccount } from "@/lib/auth/account";
 import type { ActionResult, AuthErrorKey } from "@/lib/auth/types";
 import { createClient } from "@/lib/supabase/server";
+import { birthDate } from "@/lib/validation/shared";
 import {
   deleteAccountSchema,
   onboardingSchema,
@@ -190,3 +191,22 @@ export async function deleteAccount(input: DeleteAccountInput): Promise<ActionRe
   const locale = await getLocale();
   return redirect({ href: "/login?deleted=1", locale });
 }
+
+/** Clears an admin's age check once the person confirms they are 18 or older. */
+export async function confirmAge(input: { birthDate: string }): Promise<ActionResult> {
+  const parsed = birthDate.safeParse(input.birthDate);
+  if (!parsed.success) return { ok: false, error: "invalidInput", fields: { birthDate: parsed.error.issues[0]?.message ?? "birthDateInvalid" } };
+
+  const account = await getAccount();
+  if (!account) return { ok: false, error: "sessionExpired" };
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("confirm_my_age", { p_birth_date: parsed.data });
+  if (error) {
+    if (error.message.includes("not_required")) return { ok: true, redirectTo: "/dashboard" };
+    return { ok: false, error: dbErrorKey(error.message) };
+  }
+  if (account.username) updateTag(`profile:${account.username}`);
+  return { ok: true, redirectTo: "/dashboard" };
+}
+

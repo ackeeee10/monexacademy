@@ -14,7 +14,13 @@ export async function HeaderAuth() {
   const account = await getAccount();
   const user: HeaderUser | null =
     account && !account.deletedAt
-      ? { username: account.username, email: account.email, avatarUrl: account.avatarUrl, plan: account.plan }
+      ? {
+          username: account.username,
+          email: account.email,
+          avatarUrl: account.avatarUrl,
+          plan: account.plan,
+          isAdmin: account.role === "admin",
+        }
       : null;
 
   return (

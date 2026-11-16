@@ -121,6 +121,11 @@ export function MobileNav({ user }: { user: HeaderUser | null }) {
                       <Button asChild size="lg">
                         <Link href="/dashboard">{t("dashboard")}</Link>
                       </Button>
+                      {user.isAdmin && (
+                        <Button asChild size="lg" variant="secondary">
+                          <Link href="/admin">{t("admin")}</Link>
+                        </Button>
+                      )}
                       <div className="grid grid-cols-2 gap-3">
                         <Button asChild size="lg" variant="secondary">
                           <Link href="/settings">{t("settings")}</Link>
