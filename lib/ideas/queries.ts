@@ -36,6 +36,7 @@ export type IdeaSummary = {
   lookingForRoles: string[];
   isMonexOriginal: boolean;
   isFeatured: boolean;
+  featuredUntil: string | null;
   savesCount: number;
   publishedAt: string | null;
   createdAt: string;
@@ -90,6 +91,7 @@ function toSummary(row: Row): IdeaSummary {
     lookingForRoles: (row.looking_for_roles as string[] | null) ?? [],
     isMonexOriginal: row.source === "monex",
     isFeatured: featuredUntil !== null && new Date(featuredUntil) > new Date(),
+    featuredUntil,
     savesCount: row.saves_count as number,
     publishedAt: row.published_at as string | null,
     createdAt: row.created_at as string,
@@ -170,6 +172,23 @@ export async function searchIdeas(filters: IdeaFilters): Promise<IdeaPage> {
     page,
     pageCount: Math.max(1, Math.ceil(total / IDEAS_PAGE_SIZE)),
   };
+}
+
+/** Currently featured approved ideas (newest feature first). */
+export async function getFeaturedIdeas(limit = 3): Promise<IdeaSummary[]> {
+  if (!isSupabaseConfigured()) return [];
+  const { data, error } = await createPublicClient()
+    .from("ideas")
+    .select(SUMMARY_SELECT)
+    .eq("status", "approved")
+    .gt("is_featured_until", new Date().toISOString())
+    .order("is_featured_until", { ascending: false })
+    .limit(limit);
+  if (error) {
+    console.error("[ideas] featured failed", error.message);
+    return [];
+  }
+  return ((data ?? []) as unknown as Row[]).map(toSummary);
 }
 
 /** One idea by id, using the caller's session (authors can see their own drafts). */

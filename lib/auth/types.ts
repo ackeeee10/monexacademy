@@ -40,6 +40,10 @@ export type AuthErrorKey =
   | "targetNotFound"
   | "cannotReportSelf"
   | "notRequired"
+  | "insufficientCredits"
+  | "priceChanged"
+  | "postLimitReached"
+  | "invalidAmount"
   | "unexpected";
 
 export type ActionResult<T = undefined> =

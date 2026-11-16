@@ -121,6 +121,9 @@ export function MobileNav({ user }: { user: HeaderUser | null }) {
                       <Button asChild size="lg">
                         <Link href="/dashboard">{t("dashboard")}</Link>
                       </Button>
+                      <Button asChild size="lg" variant="secondary">
+                        <Link href="/wallet">{t("wallet")} · {user.credits.toLocaleString("en-US")}</Link>
+                      </Button>
                       {user.isAdmin && (
                         <Button asChild size="lg" variant="secondary">
                           <Link href="/admin">{t("admin")}</Link>

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
-import { getIdeaCategories, searchIdeas } from "@/lib/ideas/queries";
+import { getFeaturedIdeas, getIdeaCategories, searchIdeas } from "@/lib/ideas/queries";
 import { ideaFiltersSchema, type IdeaFilters } from "@/lib/validation/idea";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -33,10 +33,13 @@ async function IdeasContent({ searchParams }: { searchParams: PageProps<"/[local
   );
   const filters: IdeaFilters = parsed.success ? parsed.data : {};
 
-  const [t, categories, result] = await Promise.all([
+  // Featured ideas lead the unfiltered first page.
+  const showFeatured = Object.keys(filters).every((k) => k === "sort") && !filters.page;
+  const [t, categories, result, featured] = await Promise.all([
     getTranslations("Ideas"),
     getIdeaCategories(),
     searchIdeas(filters),
+    showFeatured ? getFeaturedIdeas(3) : Promise.resolve([]),
   ]);
 
   return (
@@ -54,6 +57,21 @@ async function IdeasContent({ searchParams }: { searchParams: PageProps<"/[local
       <div className="mt-10">
         <IdeaFilterBar current={filters} categories={categories} />
       </div>
+
+      {featured.length > 0 && (
+        <section className="mt-10 space-y-4" aria-labelledby="featured-heading">
+          <h2 id="featured-heading" className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+            {t("featured")}
+          </h2>
+          <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {featured.map((idea) => (
+              <li key={idea.id} className="min-w-0">
+                <IdeaCard idea={idea} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <p className="mt-8 text-sm text-muted" aria-live="polite">
         {t("count", { count: result.total })}

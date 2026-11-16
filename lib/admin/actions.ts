@@ -22,6 +22,8 @@ const ERROR_KEYS: [string, AuthErrorKey][] = [
   ["slug_taken", "slugTaken"],
   ["in_use", "inUse"],
   ["not_found", "notFound"],
+  ["insufficient_credits", "insufficientCredits"],
+  ["invalid_amount", "invalidAmount"],
 ];
 
 function dbErrorKey(message: string | undefined): AuthErrorKey {
@@ -156,4 +158,21 @@ export async function deleteSkillAction(skillId: string): Promise<ActionResult> 
   const result = await call("admin_delete_skill", { p_id: skillId });
   if (result.ok) updateTag("skills");
   return result;
+}
+
+// --- Credits ------------------------------------------------------------------
+
+const adjustSchema = z.object({
+  userId: id,
+  amount: z.number().int().min(-100000).max(100000).refine((n) => n !== 0, "invalidAmount"),
+  reason: z.string().trim().min(1, "noteRequired").max(500, "noteTooLong"),
+});
+
+export async function adjustCreditsAction(input: z.input<typeof adjustSchema>): Promise<ActionResult> {
+  const parsed = adjustSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: "invalidInput", fields: { [String(parsed.error.issues[0]?.path[0])]: parsed.error.issues[0]?.message ?? "" } };
+  }
+  const v = parsed.data;
+  return call("admin_adjust_credits", { p_user: v.userId, p_amount: v.amount, p_reason: v.reason });
 }

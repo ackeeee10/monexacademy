@@ -74,6 +74,10 @@ const makeUser = async (username) => {
   await as("authenticated", id);
   await c.query(`select public.complete_onboarding($1,null,false,'{idea_owner}','100_1000','online','solo','5_15',$2,$3)`,
     [username, [cat], skills]);
+  // Elite = no post limits, so these moderation tests aren't affected by Phase 5 credits.
+  await owner();
+  await c.query("update public.profiles set plan='elite' where id=$1", [id]);
+  await as("authenticated", id);
   return id;
 };
 const makeAdmin = async (username) => {

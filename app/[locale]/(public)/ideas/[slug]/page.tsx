@@ -1,9 +1,11 @@
 import { ArrowLeft, Pencil } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
+import { FeatureButton } from "@/components/credits/feature-button";
+import { UnlockButton } from "@/components/credits/unlock-button";
 import { IdeaFacts } from "@/components/ideas/idea-facts";
 import { LockedContent } from "@/components/ideas/locked-content";
 import { SaveButton } from "@/components/ideas/save-button";
@@ -15,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert } from "@/components/ui/alert";
 import { Link } from "@/i18n/navigation";
 import { getAccount } from "@/lib/auth/account";
+import { getCreditPrices, getWallet } from "@/lib/credits/queries";
 import { getIdeaBySlug, getIdeaLockedContent, isIdeaSaved } from "@/lib/ideas/queries";
 
 type Props = PageProps<"/[locale]/ideas/[slug]">;
@@ -50,11 +53,14 @@ async function IdeaDetail({ params }: { params: Props["params"] }) {
   ]);
   if (!idea) notFound();
 
-  const content = await getIdeaLockedContent(idea.id);
+  const [content, prices] = await Promise.all([getIdeaLockedContent(idea.id), getCreditPrices()]);
   const isAuthor = content?.isAuthor === true;
   // Non-authors can't see drafts (RLS hides them), so anything here is approved or the author's own.
   const saved = account && !isAuthor ? await isIdeaSaved(idea.id) : false;
   const canEdit = isAuthor && idea.status !== "approved";
+  const unlockCost = prices.unlock_idea ?? 5;
+  const wallet = isAuthor && idea.status === "approved" ? await getWallet(1) : null;
+  const format = await getFormatter();
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -94,6 +100,14 @@ async function IdeaDetail({ params }: { params: Props["params"] }) {
         {!isAuthor && <SaveButton ideaId={idea.id} initialSaved={saved} signedIn={account !== null} returnPath={`/ideas/${idea.slug}`} />}
         {!isAuthor && idea.status === "approved" && (
           <ReportButton targetType="idea" targetId={idea.id} signedIn={account !== null} returnPath={`/ideas/${idea.slug}`} />
+        )}
+        {wallet && (
+          <FeatureButton ideaId={idea.id} cost={wallet.featured.nextCost} balance={wallet.total} />
+        )}
+        {isAuthor && idea.isFeatured && idea.featuredUntil && (
+          <span className="text-sm text-accent">
+            {t("detail.featuredUntil", { date: format.dateTime(new Date(idea.featuredUntil), { dateStyle: "medium" }) })}
+          </span>
         )}
         {canEdit && (
           <Button asChild variant="secondary">
@@ -143,7 +157,19 @@ async function IdeaDetail({ params }: { params: Props["params"] }) {
         <h2 id="locked-heading" className="sr-only">
           {t("detail.launchPlan")}
         </h2>
-        <LockedContent content={content} />
+        <LockedContent
+          content={content}
+          action={
+            idea.status === "approved" ? (
+              <UnlockButton
+                ideaId={idea.id}
+                cost={unlockCost}
+                balance={account ? account.credits : null}
+                returnPath={`/ideas/${idea.slug}`}
+              />
+            ) : null
+          }
+        />
       </section>
     </div>
   );

@@ -171,3 +171,20 @@ export async function listAudit(page: number) {
     emptyPage<AuditEntry>()
   );
 }
+
+export type AdminUserCredits = {
+  balances: { subscription: number; purchased: number; earned: number };
+  total: number;
+  transactions: { delta: number; bucket: string; reason: string; note: string | null; balanceAfter: number; createdAt: string }[];
+};
+
+export const getAdminUserCredits = (id: string) => rpc<AdminUserCredits>("admin_get_user_credits", { p_user: id });
+
+export type AdminCreditStats = {
+  byReason: { reason: string; granted: number; spent: number; count: number }[];
+  inCirculation: { subscription: number; purchased: number; earned: number };
+  unlocks: number;
+  featured: number;
+};
+
+export const getAdminCreditStats = (days = 30) => rpc<AdminCreditStats>("admin_credit_stats", { p_days: days });

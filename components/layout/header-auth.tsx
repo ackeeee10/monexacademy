@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { getAccount } from "@/lib/auth/account";
 
+import { CreditChip } from "./credit-chip";
 import { MobileNav } from "./mobile-nav";
 import { ThemeToggle } from "./theme-toggle";
 import { UserMenu, type HeaderUser } from "./user-menu";
@@ -20,6 +21,7 @@ export async function HeaderAuth() {
           avatarUrl: account.avatarUrl,
           plan: account.plan,
           isAdmin: account.role === "admin",
+          credits: account.credits,
         }
       : null;
 
@@ -27,7 +29,8 @@ export async function HeaderAuth() {
     <div className="flex items-center justify-end gap-1.5">
       <ThemeToggle className="hidden md:inline-flex" />
       {user ? (
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-2 md:flex">
+          <CreditChip credits={user.credits} />
           <UserMenu user={user} />
         </div>
       ) : (

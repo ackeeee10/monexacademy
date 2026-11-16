@@ -24,6 +24,8 @@ export type Account = {
   plan: "free" | "pro" | "elite";
   isBlocked: boolean;
   ageCheckRequired: boolean;
+  /** Total credits across all buckets. */
+  credits: number;
   deletedAt: string | null;
   onboardingCompleted: boolean;
   hasBirthDate: boolean;
@@ -51,6 +53,7 @@ function toAccount(raw: RawAccount): Account {
     plan: (str(raw.plan) as Account["plan"]) ?? "free",
     isBlocked: raw.is_blocked === true,
     ageCheckRequired: raw.age_check_required === true,
+    credits: typeof raw.credits === "number" ? raw.credits : 0,
     deletedAt: str(raw.deleted_at),
     onboardingCompleted: raw.onboarding_completed === true,
     hasBirthDate: raw.birth_date != null,

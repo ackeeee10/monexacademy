@@ -29,7 +29,8 @@
     "profile": "View profile",
     "logout": "Log out",
     "account": "Account menu",
-    "admin": "Admin"
+    "admin": "Admin",
+    "wallet": "Wallet"
   },
   "Theme": {
     "toggle": "Switch color theme",
@@ -112,7 +113,8 @@
     "settingsSecurity": "Security",
     "settingsPrivacy": "Privacy & data",
     "admin": "Admin",
-    "confirmAge": "Confirm your age"
+    "confirmAge": "Confirm your age",
+    "wallet": "Wallet"
   },
   "Errors": {
     "invalidInput": "Please check the highlighted fields.",
@@ -170,7 +172,11 @@
     "notFound": "This item no longer exists.",
     "targetNotFound": "This content is no longer available.",
     "cannotReportSelf": "You can't report your own content.",
-    "notRequired": "No age confirmation is needed for this account."
+    "notRequired": "No age confirmation is needed for this account.",
+    "insufficientCredits": "You don't have enough credits for this.",
+    "priceChanged": "The price just changed. Refresh the page to see the new price.",
+    "postLimitReached": "You've used the free posts in your plan.",
+    "invalidAmount": "Enter a whole number that isn't zero."
   },
   "Auth": {
     "or": "or",
@@ -524,14 +530,26 @@
       "unavailable": "This idea is not available.",
       "lockedTitle": "Full plan is locked",
       "lockedBody": "The launch plan, market analysis, risks and checklist unlock with credits.",
-      "unlock": "Unlock with credits",
-      "unlockLater": "Credits arrive in a later update",
+      "unlock": "Unlock for {cost, plural, one {# credit} other {# credits}}",
       "launchPlan": "Launch plan",
       "marketAnalysis": "Market and competition",
       "risks": "Risks",
       "checklist": "Checklist",
       "noContent": "The author hasn't added this yet.",
-      "reviewerNote": "Note from the reviewer"
+      "reviewerNote": "Note from the reviewer",
+      "unlockBalance": "You have {count, plural, one {# credit} other {# credits}}.",
+      "unlockConfirm": "Unlock the full plan for {cost, plural, one {# credit} other {# credits}}? It stays unlocked for you.",
+      "unlockYes": "Unlock",
+      "unlockCancel": "Cancel",
+      "notEnough": "You need {cost} credits and have {count}.",
+      "getCredits": "Get credits",
+      "signInToUnlock": "Sign in to unlock",
+      "unlocked": "Unlocked",
+      "feature": "Feature for 7 days",
+      "featureCost": "{cost, plural, =0 {Free with your plan} one {# credit} other {# credits}}",
+      "featuredUntil": "Featured until {date}",
+      "featureConfirm": "Feature this idea for 7 days for {cost, plural, =0 {free (included in your plan)} one {# credit} other {# credits}}?",
+      "confirm": "Confirm"
     },
     "status": {
       "draft": "Draft. Only you can see this idea.",
@@ -598,7 +616,12 @@
       "published": "Your idea is live.",
       "reviewIntro": "Check the details below. Submitting sends the idea for review. Trusted authors are published straight away.",
       "unexpected": "Something went wrong while saving. Your changes are still on this page. Please try again.",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "extraPostTitle": "Post beyond your plan",
+      "extraPostBody": "You've used the free posts in your plan. Submitting this idea costs {cost, plural, one {# credit} other {# credits}}. You have {count}.",
+      "extraPostPay": "Pay and submit",
+      "extraPostNoCredits": "You don't have enough credits. Get credits or upgrade your plan to post more.",
+      "seePricing": "See plans"
     },
     "notFound": "Idea not found"
   },
@@ -638,7 +661,8 @@
       "reports": "Reports",
       "users": "Users",
       "categories": "Categories & skills",
-      "audit": "Audit log"
+      "audit": "Audit log",
+      "revenue": "Credits & revenue"
     },
     "loadError": "We couldn't load this data. Refresh the page; if it keeps happening, check that the Phase 4 migration has been run.",
     "empty": "Nothing here.",
@@ -793,6 +817,131 @@
       "target": "Target",
       "details": "Details"
     },
-    "mfaRelogin": "Your account has an authenticator app turned on, but this session hasn't passed it. Log out and log in again with your code."
+    "mfaRelogin": "Your account has an authenticator app turned on, but this session hasn't passed it. Log out and log in again with your code.",
+    "credits": {
+      "title": "Credits",
+      "balance": "Balance",
+      "adjust": "Add or remove credits",
+      "amount": "Amount",
+      "amountHint": "Positive adds credits, negative removes them.",
+      "reason": "Reason",
+      "reasonHint": "Required. Shown in the user's wallet history and saved in the audit log.",
+      "apply": "Apply",
+      "recent": "Recent activity",
+      "none": "No credit activity."
+    },
+    "revenue": {
+      "title": "Credits & revenue",
+      "subtitle": "Credit movement over the last 30 days. Payments and subscriptions appear here once checkout is connected.",
+      "inCirculation": "Credits held by users",
+      "unlocks": "Idea unlocks",
+      "featured": "Featured activations",
+      "reason": "Reason",
+      "granted": "Added",
+      "spent": "Spent",
+      "count": "Entries",
+      "moneySoon": "Revenue in USD (subscriptions, credit packages) arrives with checkout in Phase 5B."
+    }
+  },
+  "Wallet": {
+    "title": "Wallet",
+    "subtitle": "Your credits, what they're spent on, and what your plan includes.",
+    "chipLabel": "{count, plural, one {# credit} other {# credits}}, open wallet",
+    "balance": "Credits",
+    "buckets": {
+      "subscription": "From your plan",
+      "purchased": "Bought and bonus",
+      "earned": "Earned as a creator"
+    },
+    "bucketsHint": "Credits from your plan are used first and expire at the end of each billing period. Bought, bonus and earned credits don't expire.",
+    "buy": "Buy credits",
+    "buySoon": "Buying credits opens soon.",
+    "plan": "Your plan",
+    "planName": {
+      "free": "Free",
+      "pro": "Pro",
+      "elite": "Elite"
+    },
+    "comparePlans": "Compare plans",
+    "posts": "Free posts",
+    "postsUnlimited": "Unlimited posts",
+    "postsUsed": "{used} of {total} used{reset, select, monthly { this month} other {}}",
+    "postsNext": "Next post: {cost, plural, =0 {free} one {# credit} other {# credits}}",
+    "featured": "Featured ideas",
+    "featuredQuota": "{quota, plural, =0 {Not included in your plan} one {# free per month} other {# free per month}}",
+    "featuredNext": "Next feature: {cost, plural, =0 {free} one {# credit} other {# credits}}",
+    "prices": "What credits buy",
+    "history": "History",
+    "historyEmpty": "No credit activity yet.",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "credits": "{count, plural, one {# credit} other {# credits}}",
+    "balanceAfter": "Balance {balance}",
+    "reasons": {
+      "signup_bonus": "Welcome bonus",
+      "subscription_grant": "Monthly plan credits",
+      "trial_grant": "Trial credits",
+      "purchase": "Credits bought",
+      "unlock_idea": "Unlocked an idea",
+      "first_message": "First message",
+      "job_apply": "Job application",
+      "extra_post": "Extra post",
+      "feature_post": "Featured an idea",
+      "lesson_purchase": "Bought a lesson",
+      "creator_earning": "Earned from your idea",
+      "admin_adjustment": "Adjustment by MONEX",
+      "refund": "Refund",
+      "expiry": "Plan credits expired"
+    },
+    "actions": {
+      "unlock_idea": "Unlock an idea's full plan",
+      "first_message": "First message to an author, creator or talent",
+      "job_apply": "Apply for a job",
+      "extra_post": "Post beyond your plan",
+      "feature_post": "Feature a post for 7 days"
+    },
+    "creatorShare": "When someone unlocks your idea, you earn half of the credits (rounded down)."
+  },
+  "Pricing": {
+    "title": "Pricing",
+    "subtitle": "Start free. Upgrade when you're ready to post more and unlock more ideas.",
+    "monthly": "Monthly",
+    "yearly": "Yearly · 2 months free",
+    "perMonth": "/ month",
+    "perYear": "/ year",
+    "current": "Your plan",
+    "getStarted": "Get started",
+    "soon": "Available soon",
+    "popular": "Most popular",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "tagline": "Explore ideas and post your first ones."
+      },
+      "pro": {
+        "name": "Pro",
+        "tagline": "For people actively building a business."
+      },
+      "elite": {
+        "name": "Elite",
+        "tagline": "For serious creators who post and promote a lot."
+      }
+    },
+    "features": {
+      "credits": "{value} credits",
+      "posts": "{value} posts",
+      "featured": "{count, plural, =0 {No featured posts} one {# featured post per month} other {# featured posts per month}}",
+      "browse": "Browse every idea",
+      "lessons": "10 free MONEX Academy lessons",
+      "badgePro": "Pro badge on your profile",
+      "badgeElite": "Gold Elite badge on your profile"
+    },
+    "trial": "New accounts can try Pro free for {days} days with {credits} credits.",
+    "creditsTitle": "What credits buy",
+    "packagesTitle": "Need more credits?",
+    "packageCredits": "{count} credits",
+    "buy": "Buy",
+    "notes": "Credits aren't money and can't be cashed out. Plan credits expire at the end of each billing period; bought and earned credits don't. Prices in USD; tax is added where required."
   }
 }

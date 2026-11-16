@@ -15,6 +15,7 @@ function dbErrorKey(message: string | undefined): AuthErrorKey {
   if (message.includes("idea_not_found")) return "ideaNotFound";
   if (message.includes("idea_locked")) return "ideaLocked";
   if (message.includes("ideas_earning_range")) return "earningsInvalid";
+  if (message.includes("insufficient_credits")) return "insufficientCredits";
   if (message.includes("ideas_category_id_fkey") || message.includes("idea_skills_skill_id_fkey")) return "invalidInput";
   console.error("[ideas]", message);
   return "unexpected";
@@ -29,6 +30,8 @@ export async function saveIdeaAction(
   id: string | null,
   input: IdeaInput,
   submit: boolean,
+  /** The user agreed to pay credits for a post over the plan's free posts. */
+  payExtra = false,
 ): Promise<ActionResult<SavedIdea>> {
   const account = await getAccount();
   if (!account) return { ok: false, error: "sessionExpired" };
@@ -48,6 +51,7 @@ export async function saveIdeaAction(
   const { data: ideaId, error } = await supabase.rpc("save_idea", {
     p_id: id,
     p_submit: submit,
+    p_pay_extra: payExtra,
     p_data: {
       title: v.title,
       short_description: v.shortDescription,
@@ -66,6 +70,10 @@ export async function saveIdeaAction(
       risks: v.risks ?? "",
     },
   });
+  if (error?.message.includes("post_limit_reached")) {
+    // detail = credits the extra post costs; the form asks before paying.
+    return { ok: false, error: "postLimitReached", detail: error.details ?? undefined };
+  }
   if (error || typeof ideaId !== "string") {
     return { ok: false, error: dbErrorKey(error?.message) };
   }

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { ChoiceCard } from "@/components/ui/choice";
 import { Field, Select, Textarea, fieldAria } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { saveIdeaAction } from "@/lib/ideas/actions";
 import { type FormCategory, type FormSkill, type IdeaFormValues } from "@/lib/ideas/form-values";
 import { MAX_LAUNCH_STEPS, MAX_ROLES, STEP_FIELDS, ideaSchema, DIFFICULTIES, TIME_TO_INCOME, type IdeaInput } from "@/lib/validation/idea";
@@ -45,9 +45,11 @@ type Props = {
   initialValues: IdeaFormValues;
   categories: FormCategory[];
   skills: FormSkill[];
+  /** The author's credit balance, shown when an extra post must be paid for. */
+  credits: number;
 };
 
-export function IdeaForm({ ideaId, initialValues, categories, skills }: Props) {
+export function IdeaForm({ ideaId, initialValues, categories, skills, credits }: Props) {
   const t = useTranslations("Ideas.create");
   const tOpt = useTranslations("Options");
   const tIdeas = useTranslations("Ideas");
@@ -61,6 +63,8 @@ export function IdeaForm({ ideaId, initialValues, categories, skills }: Props) {
   const [notice, setNotice] = useState<{ tone: "success" | "danger"; text: string } | null>(null);
   const [pending, startTransition] = useTransition();
   const [roleDraft, setRoleDraft] = useState("");
+  /** Set when the plan's free posts are used up: credits the extra post costs. */
+  const [extraCost, setExtraCost] = useState<number | null>(null);
 
   const set = <K extends keyof IdeaFormValues>(key: K, value: IdeaFormValues[K]) =>
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -88,7 +92,7 @@ export function IdeaForm({ ideaId, initialValues, categories, skills }: Props) {
     }
   };
 
-  const submit = (submitForReview: boolean) => {
+  const submit = (submitForReview: boolean, payExtra = false) => {
     const all = collect();
     setErrors(all);
     if (Object.keys(all).length > 0) {
@@ -101,7 +105,11 @@ export function IdeaForm({ ideaId, initialValues, categories, skills }: Props) {
 
     setNotice(null);
     startTransition(async () => {
-      const result = await runAction(() => saveIdeaAction(id, toInput(values), submitForReview));
+      const result = await runAction(() => saveIdeaAction(id, toInput(values), submitForReview, payExtra));
+      if (!result.ok && result.error === "postLimitReached") {
+        setExtraCost(Number(result.detail) || 0);
+        return;
+      }
       if (!result.ok) {
         if (result.fields) {
           const mapped = Object.fromEntries(
@@ -407,6 +415,27 @@ export function IdeaForm({ ideaId, initialValues, categories, skills }: Props) {
               {t("next")}
               <ArrowRight aria-hidden />
             </Button>
+          ) : extraCost !== null ? (
+            <div className="w-full space-y-3 rounded-lg border border-accent/40 bg-accent/[0.06] p-4">
+              <p className="font-medium text-text">{t("extraPostTitle")}</p>
+              <p className="text-sm text-muted">{t("extraPostBody", { cost: extraCost, count: credits })}</p>
+              {credits < extraCost ? (
+                <div className="flex flex-wrap items-center gap-3">
+                  <p className="text-sm text-danger">{t("extraPostNoCredits")}</p>
+                  <Button asChild size="sm" variant="secondary">
+                    <Link href="/pricing">{t("seePricing")}</Link>
+                  </Button>
+                  <Button type="button" size="sm" variant="ghost" onClick={() => setExtraCost(null)}>{t("cancel")}</Button>
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-3">
+                  <Button type="button" onClick={() => submit(true, true)} disabled={pending}>
+                    {pending ? t("saving") : t("extraPostPay")}
+                  </Button>
+                  <Button type="button" variant="ghost" onClick={() => setExtraCost(null)} disabled={pending}>{t("cancel")}</Button>
+                </div>
+              )}
+            </div>
           ) : (
             <div className="flex flex-wrap gap-3">
               <Button type="button" variant="secondary" onClick={() => submit(false)} disabled={pending}>

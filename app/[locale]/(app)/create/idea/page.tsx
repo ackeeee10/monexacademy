@@ -29,7 +29,7 @@ export default function CreateIdeaPage(props: PageProps<"/[locale]/create/idea">
 }
 
 async function CreateIdea({ searchParams }: { searchParams: PageProps<"/[locale]/create/idea">["searchParams"] }) {
-  const [params] = await Promise.all([searchParams, requireAccount({ next: "/create/idea" })]);
+  const [params, account] = await Promise.all([searchParams, requireAccount({ next: "/create/idea" })]);
   const t = await getTranslations("Ideas");
   const id = typeof params.id === "string" && /^[0-9a-f-]{36}$/i.test(params.id) ? params.id : null;
 
@@ -88,7 +88,7 @@ async function CreateIdea({ searchParams }: { searchParams: PageProps<"/[locale]
         </h1>
         <p className="mt-3 text-muted">{t("create.subtitle")}</p>
       </div>
-      <IdeaForm ideaId={id} initialValues={initialValues} categories={categories} skills={skills} />
+      <IdeaForm ideaId={id} initialValues={initialValues} categories={categories} skills={skills} credits={account.credits} />
     </div>
   );
 }

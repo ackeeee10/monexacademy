@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, LogOut, Settings, ShieldCheck, UserRound } from "lucide-react";
+import { LayoutDashboard, LogOut, Settings, ShieldCheck, UserRound, Wallet } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
@@ -16,6 +16,7 @@ export type HeaderUser = {
   avatarUrl: string | null;
   plan: "free" | "pro" | "elite";
   isAdmin: boolean;
+  credits: number;
 };
 
 const itemClass =
@@ -65,6 +66,12 @@ export function UserMenu({ user }: { user: HeaderUser }) {
               </Link>
             </DropdownMenu.Item>
           )}
+          <DropdownMenu.Item asChild className={itemClass}>
+            <Link href="/wallet">
+              <Wallet aria-hidden />
+              {t("wallet")}
+            </Link>
+          </DropdownMenu.Item>
           <DropdownMenu.Item asChild className={itemClass}>
             <Link href="/settings">
               <Settings aria-hidden />

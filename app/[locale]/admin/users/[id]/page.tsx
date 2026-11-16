@@ -4,6 +4,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
 import { MfaRequired } from "@/components/admin/admin-shell";
+import { CreditAdjust } from "@/components/admin/credit-adjust";
 import { UserActions } from "@/components/admin/user-actions";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin/guard";
-import { getAdminUser } from "@/lib/admin/queries";
+import { getAdminUser, getAdminUserCredits } from "@/lib/admin/queries";
 import { countryName } from "@/lib/countries";
 
 type Props = PageProps<"/[locale]/admin/users/[id]">;
@@ -30,11 +31,13 @@ async function AdminUser({ params }: { params: Props["params"] }) {
   if (!mfaReady) return <MfaRequired />;
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
 
-  const [t, tIdeas, format, user] = await Promise.all([
+  const [t, tIdeas, tWallet, format, user, credits] = await Promise.all([
     getTranslations("Admin"),
     getTranslations("Admin.ideaStatus"),
+    getTranslations("Wallet"),
     getFormatter(),
     getAdminUser(id),
+    getAdminUserCredits(id),
   ]);
   if (!user) notFound();
 
@@ -93,6 +96,44 @@ async function AdminUser({ params }: { params: Props["params"] }) {
           />
         ) : (
           <Alert variant="info">{t("users.self")}</Alert>
+        )}
+      </section>
+
+      <section className="space-y-4">
+        <h3 className="text-lg font-semibold text-text">{t("credits.title")}</h3>
+        {credits && (
+          <Card className="space-y-5 p-5">
+            <p className="text-sm text-muted">
+              {t("credits.balance")}: <span className="tabular text-lg font-semibold text-text">{credits.total}</span>
+              <span className="tabular ml-2 text-xs">
+                ({credits.balances.subscription} / {credits.balances.purchased} / {credits.balances.earned})
+              </span>
+            </p>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-text">{t("credits.adjust")}</p>
+              <CreditAdjust userId={user.id} />
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-text">{t("credits.recent")}</p>
+              {credits.transactions.length === 0 ? (
+                <p className="text-sm text-muted">{t("credits.none")}</p>
+              ) : (
+                <ul className="divide-y divide-border text-sm">
+                  {credits.transactions.map((tx, i) => (
+                    <li key={i} className="flex items-center justify-between gap-3 py-2">
+                      <span className="text-text">
+                        {tWallet.has(`reasons.${tx.reason}` as never) ? tWallet(`reasons.${tx.reason}` as never) : tx.reason}
+                        {tx.note ? <span className="text-muted"> · {tx.note}</span> : null}
+                      </span>
+                      <span className="tabular whitespace-nowrap text-muted">
+                        {tx.delta > 0 ? `+${tx.delta}` : tx.delta} → {tx.balanceAfter} · {date(tx.createdAt)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </Card>
         )}
       </section>
 

@@ -2,7 +2,6 @@ import { Lock } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { IdeaLockedContent } from "@/lib/ideas/queries";
 
@@ -11,7 +10,7 @@ import type { IdeaLockedContent } from "@/lib/ideas/queries";
  * database has refused it, so nothing sensitive is rendered: only blurred
  * placeholder bars and a locked notice.
  */
-export async function LockedContent({ content }: { content: IdeaLockedContent | null }) {
+export async function LockedContent({ content, action }: { content: IdeaLockedContent | null; action?: ReactNode }) {
   const t = await getTranslations("Ideas.detail");
 
   if (!content) {
@@ -30,10 +29,7 @@ export async function LockedContent({ content }: { content: IdeaLockedContent | 
             <h2 className="text-lg font-semibold text-text">{t("lockedTitle")}</h2>
             <p className="max-w-md text-sm text-muted">{t("lockedBody")}</p>
           </div>
-          <Button disabled variant="secondary">
-            {t("unlock")}
-          </Button>
-          <p className="text-xs text-muted">{t("unlockLater")}</p>
+          {action}
         </div>
       </Card>
     );
