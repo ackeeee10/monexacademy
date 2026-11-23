@@ -1,12 +1,13 @@
 import "server-only";
 
 import { env } from "@/lib/env";
+import { serverEnv } from "@/lib/server-env";
 
 export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | "rejected" | "network"; detail?: string };
 
 /** Sends one email through the Resend API (no SDK needed). */
 export async function sendEmail(input: { to: string; subject: string; text: string; html: string }): Promise<SendResult> {
-  const apiKey = env.resendApiKey();
+  const apiKey = serverEnv.resendApiKey();
   if (!apiKey) return { ok: false, reason: "not_configured", detail: "RESEND_API_KEY" };
 
   try {

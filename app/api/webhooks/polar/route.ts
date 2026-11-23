@@ -2,7 +2,8 @@ import { webhooks } from "@polar-sh/sdk/2026-10";
 import { NextResponse } from "next/server";
 
 import { handlePolarEvent, IgnoredEvent } from "@/lib/billing/webhook";
-import { env, isSupabaseConfigured } from "@/lib/env";
+import { isSupabaseConfigured } from "@/lib/env";
+import { serverEnv } from "@/lib/server-env";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const json = (body: object, status: number) =>
@@ -14,7 +15,7 @@ const json = (body: object, status: number) =>
  * A 5xx answer makes Polar retry later.
  */
 export async function POST(request: Request) {
-  const secret = env.polarWebhookSecret();
+  const secret = serverEnv.polarWebhookSecret();
   if (!secret) {
     console.error("[polar webhook] POLAR_WEBHOOK_SECRET missing");
     return json({ error: "not_configured" }, 503);

@@ -3,6 +3,7 @@ import "server-only";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 import { env } from "@/lib/env";
+import { serverEnv } from "@/lib/server-env";
 
 /**
  * Client with the secret key (service_role). Bypasses RLS, so use it only for
@@ -10,7 +11,7 @@ import { env } from "@/lib/env";
  * Returns null when the key isn't configured.
  */
 export function createAdminClient() {
-  const key = env.supabaseSecretKey();
+  const key = serverEnv.supabaseSecretKey();
   if (!key) return null;
   return createSupabaseClient(env.supabaseUrl(), key, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
