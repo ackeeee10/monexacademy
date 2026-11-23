@@ -1,5 +1,5 @@
 import { CREDIT_PACKAGES } from "./plans";
-import { POLAR_PRODUCTS, type PolarProductKey } from "./polar-products";
+import { productKeyForId, type PolarProductKey } from "./polar-products";
 
 export type ProductKey = PolarProductKey;
 
@@ -9,7 +9,7 @@ export type CatalogItem =
 
 const credits = (id: (typeof CREDIT_PACKAGES)[number]["id"]) => CREDIT_PACKAGES.find((p) => p.id === id)!.credits;
 
-/** What each purchasable product gives. Keys match POLAR_PRODUCTS. */
+/** What each purchasable product gives. Keys match the Polar product maps. */
 export const CATALOG: Record<ProductKey, CatalogItem> = {
   pro_month: { key: "pro_month", kind: "subscription", plan: "pro", interval: "month" },
   pro_year: { key: "pro_year", kind: "subscription", plan: "pro", interval: "year" },
@@ -29,6 +29,6 @@ export function isProductKey(value: string): value is ProductKey {
 /** Finds the catalog item for a Polar product id. */
 export function catalogByProductId(productId: string | null | undefined): CatalogItem | null {
   if (!productId) return null;
-  const key = (Object.keys(POLAR_PRODUCTS) as ProductKey[]).find((k) => POLAR_PRODUCTS[k] === productId);
+  const key = productKeyForId(productId);
   return key ? CATALOG[key] : null;
 }

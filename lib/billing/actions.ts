@@ -6,10 +6,11 @@ import { z } from "zod";
 import { getAccount } from "@/lib/auth/account";
 import { getRequestOrigin } from "@/lib/auth/origin";
 import type { ActionResult } from "@/lib/auth/types";
+import { serverEnv } from "@/lib/server-env";
 
 import { CATALOG, PRODUCT_KEYS } from "./catalog";
 import { getPolar } from "./polar";
-import { POLAR_PRODUCTS } from "./polar-products";
+import { polarProducts } from "./polar-products";
 import { TRIAL } from "./plans";
 import { getBilling } from "./queries";
 
@@ -68,7 +69,7 @@ export async function startCheckoutAction(value: z.input<typeof input>): Promise
   const origin = await getRequestOrigin();
   try {
     const checkout = await polar.checkouts.create({
-      products: [POLAR_PRODUCTS[item.key]],
+      products: [polarProducts(serverEnv.polarServer())[item.key]],
       external_customer_id: account.id,
       customer_email: account.email,
       metadata: { user_id: account.id, product_key: item.key },
