@@ -1,10 +1,12 @@
-import { NextResponse } from "next/server";
+import { connection, NextResponse } from "next/server";
 
 /**
  * Configuration check for the owner: shows WHICH settings are present,
- * never their values.
+ * never their values. Runs on every request (not prerendered), so it shows
+ * the live settings and nothing from the build is baked into a static file.
  */
-export function GET() {
+export async function GET() {
+  await connection();
   const has = (v: string | undefined) => Boolean(v && v.trim());
   return NextResponse.json(
     {
@@ -19,7 +21,11 @@ export function GET() {
         EMAIL_FROM: has(process.env.EMAIL_FROM),
         POLAR_ACCESS_TOKEN: has(process.env.POLAR_ACCESS_TOKEN),
         POLAR_WEBHOOK_SECRET: has(process.env.POLAR_WEBHOOK_SECRET),
-        POLAR_SERVER: process.env.POLAR_SERVER ?? null,
+        POLAR_SERVER: !process.env.POLAR_SERVER
+          ? null
+          : ["sandbox", "production"].includes(process.env.POLAR_SERVER.trim())
+            ? process.env.POLAR_SERVER.trim()
+            : "invalid value",
       },
     },
     { headers: { "Cache-Control": "no-store" } },
