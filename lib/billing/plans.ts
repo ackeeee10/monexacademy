@@ -18,6 +18,3 @@ export const CREDIT_PACKAGES = [
 ] as const;
 
 export const TRIAL = { days: 7, credits: 15 } as const;
-
-/** False until Phase 5B connects the payment provider. */
-export const CHECKOUT_ENABLED = false;

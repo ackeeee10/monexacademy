@@ -32,7 +32,7 @@ const buttonVariants = cva(
   },
 );
 
-type ButtonProps = ComponentProps<"button"> &
+export type ButtonProps = ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     /** Render the child element (e.g. a Link) with button styles. */
     asChild?: boolean;

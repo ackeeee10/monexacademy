@@ -44,6 +44,8 @@ export type AuthErrorKey =
   | "priceChanged"
   | "postLimitReached"
   | "invalidAmount"
+  | "checkoutUnavailable"
+  | "billingPortalUnavailable"
   | "unexpected";
 
 export type ActionResult<T = undefined> =

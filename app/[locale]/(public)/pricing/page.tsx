@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/i18n/navigation";
-import { CHECKOUT_ENABLED, CREDIT_PACKAGES, PLANS, TRIAL } from "@/lib/billing/plans";
+import { CheckoutButton } from "@/components/billing/checkout-button";
+import { CREDIT_PACKAGES, PLANS, TRIAL } from "@/lib/billing/plans";
+import { isCheckoutEnabled } from "@/lib/billing/polar";
 import { getCreditPrices } from "@/lib/credits/queries";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +23,7 @@ const usd = (n: number) => `$${n.toFixed(2).replace(/\.00$/, "")}`;
 
 export default async function PricingPage() {
   const [t, tWallet, prices] = await Promise.all([getTranslations("Pricing"), getTranslations("Wallet"), getCreditPrices()]);
+  const enabled = isCheckoutEnabled();
 
   return (
     <Container className="py-12 md:py-20">
@@ -74,9 +77,18 @@ export default async function PricingPage() {
                   <Button asChild variant="secondary" className="w-full">
                     <Link href="/signup">{t("getStarted")}</Link>
                   </Button>
+                ) : enabled ? (
+                  <div className="space-y-2">
+                    <CheckoutButton product={`${plan.id}_month`} variant={highlight ? "primary" : "secondary"}>
+                      {t("subscribeMonthly")}
+                    </CheckoutButton>
+                    <CheckoutButton product={`${plan.id}_year`} variant="ghost" size="sm">
+                      {t("subscribeYearly", { price: usd(plan.yearlyUsd) })}
+                    </CheckoutButton>
+                  </div>
                 ) : (
-                  <Button className="w-full" variant={highlight ? "primary" : "secondary"} disabled={!CHECKOUT_ENABLED}>
-                    {CHECKOUT_ENABLED ? t("getStarted") : t("soon")}
+                  <Button className="w-full" variant={highlight ? "primary" : "secondary"} disabled>
+                    {t("soon")}
                   </Button>
                 )}
               </div>
@@ -107,9 +119,15 @@ export default async function PricingPage() {
                 <Card className="flex h-full flex-col items-center gap-3 p-5 text-center">
                   <p className="tabular text-2xl font-bold text-text">{t("packageCredits", { count: p.credits })}</p>
                   <p className="tabular text-sm text-muted">{usd(p.usd)}</p>
-                  <Button size="sm" variant="secondary" className="mt-auto w-full" disabled={!CHECKOUT_ENABLED}>
-                    {CHECKOUT_ENABLED ? t("buy") : t("soon")}
-                  </Button>
+                  {enabled ? (
+                    <CheckoutButton product={p.id} size="sm" variant="secondary" className="mt-auto w-full">
+                      {t("buy")}
+                    </CheckoutButton>
+                  ) : (
+                    <Button size="sm" variant="secondary" className="mt-auto w-full" disabled>
+                      {t("soon")}
+                    </Button>
+                  )}
                 </Card>
               </li>
             ))}

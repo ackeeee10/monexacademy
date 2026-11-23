@@ -11,7 +11,9 @@ import { Container } from "@/components/ui/container";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { requireAccount } from "@/lib/auth/account";
-import { CHECKOUT_ENABLED } from "@/lib/billing/plans";
+import { CheckoutButton } from "@/components/billing/checkout-button";
+import { isCheckoutEnabled } from "@/lib/billing/polar";
+import { getBilling, refreshMyCredits } from "@/lib/billing/queries";
 import { WALLET_PAGE_SIZE, getWallet } from "@/lib/credits/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -36,7 +38,12 @@ async function WalletContent({ searchParams }: { searchParams: PageProps<"/[loca
   const params = await searchParams;
   const pageNum = Number(typeof params.page === "string" ? params.page : "1");
   const page = Number.isInteger(pageNum) && pageNum >= 1 ? pageNum : 1;
-  const [t, format, wallet] = await Promise.all([getTranslations("Wallet"), getFormatter(), getWallet(page)]);
+  await refreshMyCredits();
+  const [t, format, wallet, billing] = await Promise.all([getTranslations("Wallet"), getFormatter(), getWallet(page), getBilling()]);
+  const enabled = isCheckoutEnabled();
+  const justPaid = params.checkout === "success";
+  const sub = billing?.subscription ?? null;
+  const date = (iso: string | null) => (iso ? format.dateTime(new Date(iso), { dateStyle: "medium" }) : "");
 
   if (!wallet) return <Alert variant="danger">{(await getTranslations("Errors"))("unexpected")}</Alert>;
   const pageCount = Math.max(1, Math.ceil(wallet.transactionsTotal / WALLET_PAGE_SIZE));
@@ -48,6 +55,12 @@ async function WalletContent({ searchParams }: { searchParams: PageProps<"/[loca
         <p className="mt-3 text-muted">{t("subtitle")}</p>
       </div>
 
+      {justPaid && (
+        <Alert variant="success">
+          <strong className="font-semibold">{t("paidTitle")}.</strong> {t("paidBody")}
+        </Alert>
+      )}
+
       <div className="grid gap-5 lg:grid-cols-[1.3fr_1fr]">
         <Card className="space-y-6 p-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -58,7 +71,7 @@ async function WalletContent({ searchParams }: { searchParams: PageProps<"/[loca
                 {wallet.total.toLocaleString("en-US")}
               </p>
             </div>
-            {CHECKOUT_ENABLED ? (
+            {enabled ? (
               <Button asChild>
                 <Link href="/pricing#credits">{t("buy")}</Link>
               </Button>
@@ -88,6 +101,26 @@ async function WalletContent({ searchParams }: { searchParams: PageProps<"/[loca
             </div>
             <Link href="/pricing" className="text-sm text-accent hover:underline">{t("comparePlans")}</Link>
           </div>
+          {sub && (
+            <div className="space-y-1 text-sm">
+              <p className="text-text">
+                {t(`interval.${sub.interval}`)}
+                {" · "}
+                {sub.status === "trialing"
+                  ? t("trialEnds", { date: date(sub.trialEnd) })
+                  : sub.cancelAtPeriodEnd
+                    ? t("endsOn", { date: date(sub.currentPeriodEnd) })
+                    : sub.status === "past_due"
+                      ? t("pastDue")
+                      : t("renewsOn", { date: date(sub.currentPeriodEnd) })}
+              </p>
+            </div>
+          )}
+          {enabled && billing?.hasCustomer && (
+            <CheckoutButton product="portal" variant="secondary" size="sm">
+              {t("manageBilling")}
+            </CheckoutButton>
+          )}
           <div className="space-y-1 text-sm">
             <p className="font-medium text-text">{t("posts")}</p>
             {wallet.posts.freePosts === null ? (

@@ -176,7 +176,9 @@
     "insufficientCredits": "You don't have enough credits for this.",
     "priceChanged": "The price just changed. Refresh the page to see the new price.",
     "postLimitReached": "You've used the free posts in your plan.",
-    "invalidAmount": "Enter a whole number that isn't zero."
+    "invalidAmount": "Enter a whole number that isn't zero.",
+    "checkoutUnavailable": "Checkout isn't available right now. Please try again in a few minutes.",
+    "billingPortalUnavailable": "We couldn't open billing right now. Please try again in a few minutes."
   },
   "Auth": {
     "or": "or",
@@ -901,7 +903,18 @@
       "extra_post": "Post beyond your plan",
       "feature_post": "Feature a post for 7 days"
     },
-    "creatorShare": "When someone unlocks your idea, you earn half of the credits (rounded down)."
+    "creatorShare": "When someone unlocks your idea, you earn half of the credits (rounded down).",
+    "paidTitle": "Payment received",
+    "paidBody": "Thanks! Your credits or plan appear here within a minute. Refresh the page if you don't see them yet.",
+    "interval": {
+      "month": "Billed monthly",
+      "year": "Billed yearly"
+    },
+    "trialEnds": "Free trial until {date}",
+    "renewsOn": "Renews on {date}",
+    "endsOn": "Canceled, active until {date}",
+    "pastDue": "Payment failed. Update your card to keep your plan.",
+    "manageBilling": "Manage plan and billing"
   },
   "Pricing": {
     "title": "Pricing",
@@ -937,11 +950,13 @@
       "badgePro": "Pro badge on your profile",
       "badgeElite": "Gold Elite badge on your profile"
     },
-    "trial": "New accounts can try Pro free for {days} days with {credits} credits.",
+    "trial": "New accounts can try Pro free for {days} days with {credits} credits. Cancel anytime before it ends.",
     "creditsTitle": "What credits buy",
     "packagesTitle": "Need more credits?",
     "packageCredits": "{count} credits",
     "buy": "Buy",
-    "notes": "Credits aren't money and can't be cashed out. Plan credits expire at the end of each billing period; bought and earned credits don't. Prices in USD; tax is added where required."
+    "notes": "Credits aren't money and can't be cashed out. Plan credits expire at the end of each billing period; bought and earned credits don't. Prices in USD; tax is added where required.",
+    "subscribeMonthly": "Choose monthly",
+    "subscribeYearly": "Or pay yearly · {price}"
   }
 }
