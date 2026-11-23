@@ -56,8 +56,9 @@ export async function POST(request: Request) {
     p_payload: JSON.parse(body),
   });
   if (recordError) {
-    console.error("[polar webhook] record", recordError.message);
-    return json({ error: "storage" }, 500);
+    console.error("[polar webhook] record", recordError.code, recordError.message);
+    // Database error text only (no keys), visible to the owner in Polar's delivery log.
+    return json({ error: "storage", code: recordError.code, detail: recordError.message }, 500);
   }
   if (!needed) return json({ received: true, duplicate: true }, 200);
 
@@ -75,6 +76,6 @@ export async function POST(request: Request) {
     }
     console.error("[polar webhook] failed", event.type, message);
     await admin.rpc("billing_finish_event", { p_event_id: eventId, p_error: message });
-    return json({ error: "processing_failed" }, 500);
+    return json({ error: "processing_failed", detail: message }, 500);
   }
 }
