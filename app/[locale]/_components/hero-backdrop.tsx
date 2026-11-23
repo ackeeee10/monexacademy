@@ -16,15 +16,15 @@ export function HeroBackdrop() {
   const summit = MILESTONES[MILESTONES.length - 1]!;
 
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_70%_20%,color-mix(in_oklab,var(--brand)_var(--hero-tint),transparent),transparent_70%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_10%_90%,color-mix(in_oklab,var(--brand)_calc(var(--hero-tint)*0.55),transparent),transparent_70%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:72px_72px] opacity-[var(--grid-opacity)] [mask-image:radial-gradient(ellipse_70%_60%_at_60%_40%,black,transparent)]" />
 
       <svg
-        className="absolute inset-0 h-full w-full opacity-45 sm:opacity-100 [mask-image:linear-gradient(to_right,rgb(0_0_0/0.18),rgb(0_0_0/0.55)_40%,black_75%)]"
+        className="absolute inset-y-0 right-0 aspect-[1440/900] h-full opacity-45 sm:opacity-100 [mask-image:linear-gradient(to_right,rgb(0_0_0/0.18),rgb(0_0_0/0.55)_40%,black_75%)]"
         viewBox="0 0 1440 900"
-        preserveAspectRatio="xMaxYMid slice"
+        preserveAspectRatio="xMaxYMid meet"
         fill="none"
       >
         <defs>
