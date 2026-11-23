@@ -121,6 +121,7 @@ async function WalletContent({ searchParams }: { searchParams: PageProps<"/[loca
               {t("manageBilling")}
             </CheckoutButton>
           )}
+          {billing?.hasCustomer && <p className="text-xs text-muted">{t("billingHelp")}</p>}
           <div className="space-y-1 text-sm">
             <p className="font-medium text-text">{t("posts")}</p>
             {wallet.posts.freePosts === null ? (

@@ -126,7 +126,7 @@
     "samePassword": "Your new password must be different from the current one.",
     "linkExpired": "This link has expired or was already used. Request a new one.",
     "codeIncorrect": "That code isn't correct. Try the latest code from your app.",
-    "accountBlocked": "This account has been blocked. Contact support if you think this is a mistake.",
+    "accountBlocked": "This account has been blocked. If you think this is a mistake, email mainquestacademy@gmail.com.",
     "emailInvalid": "Enter a valid email address.",
     "signupDisabled": "Sign-ups are temporarily unavailable.",
     "sessionExpired": "Your session has expired. Please log in again.",
@@ -209,7 +209,7 @@
       "signupLink": "Create an account",
       "deleted": "Your account is scheduled for deletion and is now hidden. Log in within 30 days to restore it.",
       "linkExpired": "That link has expired or was already used. Please log in or request a new link.",
-      "blocked": "This account has been blocked. Contact support if you think this is a mistake."
+      "blocked": "This account has been blocked. If you think this is a mistake, email mainquestacademy@gmail.com."
     },
     "signup": {
       "title": "Create your account",
@@ -914,7 +914,8 @@
     "renewsOn": "Renews on {date}",
     "endsOn": "Canceled, active until {date}",
     "pastDue": "Payment failed. Update your card to keep your plan.",
-    "manageBilling": "Manage plan and billing"
+    "manageBilling": "Manage plan and billing",
+    "billingHelp": "Questions about a payment? Email mainquestacademy@gmail.com."
   },
   "Pricing": {
     "title": "Pricing",
@@ -958,5 +959,18 @@
     "notes": "Credits aren't money and can't be cashed out. Plan credits expire at the end of each billing period; bought and earned credits don't. Prices in USD; tax is added where required.",
     "subscribeMonthly": "Choose monthly",
     "subscribeYearly": "Or pay yearly · {price}"
+  },
+  "Contact": {
+    "title": "Contact us",
+    "subtitle": "Questions about your account, a payment or something you saw on the site? Send us an email.",
+    "emailLabel": "Email",
+    "write": "Write an email",
+    "topics": {
+      "account": "Account and sign-in: include the email you signed up with.",
+      "billing": "Payments, plans and refunds: include the receipt or order number from your email.",
+      "report": "Content that breaks the rules: use the Report button on the page, or send us the link.",
+      "other": "Anything else, including ideas for the site."
+    },
+    "response": "We usually reply within 2 business days."
   }
 }

@@ -1,4 +1,8 @@
 /** Public site configuration. Labels live in messages/*.json, never here. */
+
+/** Where users, buyers and Polar receipts reach us. */
+export const SUPPORT_EMAIL = "mainquestacademy@gmail.com";
+
 export const mainNav = [
   { href: "/ideas", key: "ideas" },
   { href: "/jobs", key: "jobs" },

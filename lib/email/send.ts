@@ -2,6 +2,7 @@ import "server-only";
 
 import { env } from "@/lib/env";
 import { serverEnv } from "@/lib/server-env";
+import { SUPPORT_EMAIL } from "@/lib/site";
 
 export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | "rejected" | "network"; detail?: string };
 
@@ -14,7 +15,7 @@ export async function sendEmail(input: { to: string; subject: string; text: stri
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from: env.emailFrom(), to: [input.to], subject: input.subject, text: input.text, html: input.html }),
+      body: JSON.stringify({ from: env.emailFrom(), reply_to: SUPPORT_EMAIL, to: [input.to], subject: input.subject, text: input.text, html: input.html }),
       cache: "no-store",
     });
     if (res.ok) return { ok: true };

@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { Logo } from "@/components/brand/logo";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/i18n/navigation";
-import { footerNav } from "@/lib/site";
+import { footerNav, SUPPORT_EMAIL } from "@/lib/site";
 
 import { ThemeToggle } from "./theme-toggle";
 
@@ -19,6 +19,9 @@ export function SiteFooter({ year }: { year: number }) {
         <div className="max-w-sm space-y-5">
           <Logo className="h-8 text-text" title={null} />
           <p className="text-sm leading-relaxed text-muted">{t("Footer.tagline")}</p>
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="inline-block text-sm text-text/85 transition-colors duration-200 hover:text-accent">
+            {SUPPORT_EMAIL}
+          </a>
         </div>
 
         {columns.map((column) => (
