@@ -269,7 +269,7 @@ export async function startMfaEnrollment(): Promise<
   const { data, error } = await supabase.auth.mfa.enroll({
     factorType: "totp",
     friendlyName: `Authenticator ${new Date().toISOString().slice(0, 10)}`,
-    issuer: "MONEX Academy",
+    issuer: "Main Quest Academy",
   });
   if (error) return { ok: false, error: authErrorKey(error) };
   return { ok: true, data: { factorId: data.id, qrCode: data.totp.qr_code, secret: data.totp.secret } };

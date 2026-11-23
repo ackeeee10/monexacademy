@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `@${profile.username}`,
     description: profile.bio?.slice(0, 160) ?? undefined,
-    openGraph: { type: "profile", title: `@${profile.username} · MONEX Academy` },
+    openGraph: { type: "profile", title: `@${profile.username} · Main Quest Academy` },
     alternates: { canonical: `/u/${profile.username}` },
   };
 }

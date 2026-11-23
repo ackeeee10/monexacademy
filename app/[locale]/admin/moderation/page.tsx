@@ -66,7 +66,7 @@ async function Moderation({ searchParams }: { searchParams: Props["searchParams"
                     <span>{idea.category}</span>
                     <span aria-hidden>·</span>
                     <span>
-                      {idea.source === "monex" ? "MONEX" : t("moderation.by", { name: idea.authorUsername ? `@${idea.authorUsername}` : "—" })}
+                      {idea.source === "monex" ? "Main Quest" : t("moderation.by", { name: idea.authorUsername ? `@${idea.authorUsername}` : "—" })}
                     </span>
                     {idea.authorTrust === "trusted" && <Badge variant="success">{t("moderation.trusted")}</Badge>}
                     {idea.openReports > 0 && <Badge variant="danger">{t("moderation.reports", { count: idea.openReports })}</Badge>}

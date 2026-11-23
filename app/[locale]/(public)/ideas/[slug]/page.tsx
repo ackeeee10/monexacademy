@@ -71,14 +71,14 @@ async function IdeaDetail({ params }: { params: Props["params"] }) {
 
       <header className="mt-6 space-y-4">
         <div className="flex flex-wrap items-center gap-2">
-          {idea.isMonexOriginal && <Badge variant="accent">{t("monexOriginal")}</Badge>}
+          {idea.isOriginal && <Badge variant="accent">{t("original")}</Badge>}
           {idea.isFeatured && <Badge variant="accent">{t("featured")}</Badge>}
           <span className="text-sm text-muted">{idea.categoryName}</span>
         </div>
         <h1 className="text-3xl font-bold leading-tight text-text md:text-4xl">{idea.title}</h1>
         <p className="text-sm text-muted">
-          {idea.isMonexOriginal
-            ? t("byMonex")
+          {idea.isOriginal
+            ? t("byOriginals")
             : t("byAuthor", { name: idea.authorUsername ? `@${idea.authorUsername}` : "—" })}
         </p>
         <p className="max-w-3xl text-lg leading-relaxed text-muted">{idea.shortDescription}</p>

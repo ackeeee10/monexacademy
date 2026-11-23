@@ -1,13 +1,13 @@
 {
   "Metadata": {
-    "title": "MONEX Academy — Where money is made.",
-    "titleTemplate": "%s · MONEX Academy",
+    "title": "Main Quest Academy — Start your main quest.",
+    "titleTemplate": "%s · Main Quest Academy",
     "description": "Find a business idea that fits your budget and skills, build your team, learn what you're missing and start earning.",
-    "siteName": "MONEX Academy"
+    "siteName": "Main Quest Academy"
   },
   "Common": {
-    "brand": "MONEX Academy",
-    "slogan": "Where money is made.",
+    "brand": "Main Quest Academy",
+    "slogan": "Start your main quest.",
     "skipToContent": "Skip to content",
     "comingSoon": "Coming soon",
     "backHome": "Back to home"
@@ -23,7 +23,7 @@
     "getStarted": "Get started",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "home": "MONEX Academy home",
+    "home": "Main Quest Academy home",
     "dashboard": "Dashboard",
     "settings": "Settings",
     "profile": "View profile",
@@ -49,12 +49,12 @@
     "privacy": "Privacy Policy",
     "cookies": "Cookie Policy",
     "contentPolicy": "Content Policy",
-    "rights": "© {year} MONEX Academy. All rights reserved.",
+    "rights": "© {year} Main Quest Academy. All rights reserved.",
     "disclaimer": "Earnings figures shown on ideas are estimates by their authors, not guarantees."
   },
   "Home": {
     "eyebrow": "Business ideas with real numbers",
-    "title": "Where money is made.",
+    "title": "Start your main quest.",
     "subtitle": "Find a business that fits your budget, skills and schedule. Then build the team and learn the skills to launch it.",
     "primaryCta": "Find your idea",
     "secondaryCta": "How it works",
@@ -75,7 +75,7 @@
   },
   "Placeholder": {
     "title": "{page} is on its way",
-    "body": "We're building this part of MONEX Academy right now. Check back soon."
+    "body": "We're building this part of Main Quest Academy right now. Check back soon."
   },
   "NotFound": {
     "title": "Page not found",
@@ -132,7 +132,7 @@
     "sessionExpired": "Your session has expired. Please log in again.",
     "usernameTaken": "This username is already taken.",
     "usernameInvalid": "3–20 characters: lowercase letters, numbers, dots and underscores.",
-    "mustBe18": "You must be 18 or older to use MONEX Academy.",
+    "mustBe18": "You must be 18 or older to use Main Quest Academy.",
     "termsRequired": "Please accept the Terms to continue.",
     "intentsRequired": "Choose at least one option.",
     "confirmationMismatch": "That doesn't match. Please try again.",
@@ -203,7 +203,7 @@
       "magicSubmit": "Send me a login link",
       "magicHint": "We'll email you a secure login link. No password needed.",
       "magicSent": "Check your inbox. We sent a login link to {email}.",
-      "noAccount": "New to MONEX Academy?",
+      "noAccount": "New to Main Quest Academy?",
       "signupLink": "Create an account",
       "deleted": "Your account is scheduled for deletion and is now hidden. Log in within 30 days to restore it.",
       "linkExpired": "That link has expired or was already used. Please log in or request a new link.",
@@ -253,7 +253,7 @@
     "steps": {
       "account": {
         "title": "Choose your username",
-        "body": "This is how others will find you on MONEX Academy."
+        "body": "This is how others will find you on Main Quest Academy."
       },
       "intents": {
         "title": "What brings you here?",
@@ -412,14 +412,14 @@
       "changePassword": "Change password",
       "setPassword": "Set a password",
       "theme": "Appearance",
-      "themeBody": "Choose how MONEX Academy looks to you.",
+      "themeBody": "Choose how Main Quest Academy looks to you.",
       "themeOptions": {
         "system": "System",
         "light": "Light",
         "dark": "Dark"
       },
       "logout": "Log out",
-      "logoutBody": "Sign out of MONEX Academy on this device."
+      "logoutBody": "Sign out of Main Quest Academy on this device."
     },
     "security": {
       "title": "Two-factor authentication",
@@ -503,12 +503,12 @@
     "pagePrev": "Previous",
     "pageNext": "Next",
     "pageOf": "Page {page} of {total}",
-    "monexOriginal": "MONEX Original",
+    "original": "Main Quest Original",
     "featured": "Featured",
     "saves": "{count, plural, one {# save} other {# saves}}",
     "earningPerMonth": "{min}–{max} / month",
     "byAuthor": "By {name}",
-    "byMonex": "By MONEX Academy",
+    "byOriginals": "By Main Quest Academy",
     "labels": {
       "investment": "Start-up cost",
       "earnings": "Potential earnings",
@@ -648,7 +648,7 @@
   },
   "ConfirmAge": {
     "title": "Please confirm your age",
-    "body": "MONEX Academy is for adults only. Your account is hidden until you confirm your date of birth.",
+    "body": "Main Quest Academy is for adults only. Your account is hidden until you confirm your date of birth.",
     "birthDate": "Date of birth",
     "submit": "Confirm",
     "note": "Giving a false date of birth breaks our Terms and can lead to the account being blocked."
@@ -890,7 +890,7 @@
       "feature_post": "Featured an idea",
       "lesson_purchase": "Bought a lesson",
       "creator_earning": "Earned from your idea",
-      "admin_adjustment": "Adjustment by MONEX",
+      "admin_adjustment": "Adjustment by Main Quest",
       "refund": "Refund",
       "expiry": "Plan credits expired"
     },
@@ -933,7 +933,7 @@
       "posts": "{value} posts",
       "featured": "{count, plural, =0 {No featured posts} one {# featured post per month} other {# featured posts per month}}",
       "browse": "Browse every idea",
-      "lessons": "10 free MONEX Academy lessons",
+      "lessons": "10 free Main Quest Academy lessons",
       "badgePro": "Pro badge on your profile",
       "badgeElite": "Gold Elite badge on your profile"
     },

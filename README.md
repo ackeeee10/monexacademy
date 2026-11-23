@@ -1,4 +1,4 @@
-# MONEX Academy
+# Main Quest Academy
 
 **Where money is made.** A global platform for finding business ideas with real numbers,
 the people to build them, and the skills to launch.
@@ -31,7 +31,7 @@ app/[locale]/(public)   public pages
 app/[locale]/(auth)     login, signup, reset password
 components/ui           base components (button, card, badge, input, term)
 components/layout       header, footer, mobile menu, theme toggle
-components/brand        logo + mark (paths generated from public/brand/monex-academy-logo.svg)
+components/brand        logo + mark (paths generated from public/brand/main-quest-academy-logo.svg)
 i18n/                   next-intl routing and request config
 messages/en.json        every UI string — never hard-code text in components
 lib/                    utilities, theme, site config

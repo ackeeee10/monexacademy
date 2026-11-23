@@ -17,7 +17,7 @@ export const env = {
   supabaseSecretKey: (): string | undefined => process.env.SUPABASE_SECRET_KEY || undefined,
   resendApiKey: (): string | undefined => process.env.RESEND_API_KEY || undefined,
   /** Sender address. Until a domain is verified in Resend, only onboarding@resend.dev works. */
-  emailFrom: (): string => process.env.EMAIL_FROM || "MONEX Academy <onboarding@resend.dev>",
+  emailFrom: (): string => process.env.EMAIL_FROM || "Main Quest Academy <onboarding@resend.dev>",
 } as const;
 
 export function isSupabaseConfigured(): boolean {

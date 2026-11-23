@@ -2,20 +2,18 @@
 
 import { motion } from "motion/react";
 
-import { CANDLE_BODY, CANDLES, MOVING_AVERAGE, PRICE_LEVELS } from "./market-data";
+import { CONTOURS, MILESTONES, TRAIL } from "./quest-data";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const STAGGER = 0.022;
-const CANDLES_DONE = CANDLES.length * STAGGER;
+const TRAIL_DURATION = 1.6;
 
 /**
- * Deep navy gradient with a gold candlestick chart rising to the top right
- * (Master Prompt 5.5). Decorative only; the left side fades so the headline
- * stays readable.
+ * Deep navy gradient with a gold "quest map": topographic contours and a trail
+ * that climbs past milestones to a summit flag at the top right. Decorative
+ * only; the left side fades so the headline stays readable.
  */
 export function HeroBackdrop() {
-  const first = CANDLES[0]!;
-  const last = CANDLES[CANDLES.length - 1]!;
+  const summit = MILESTONES[MILESTONES.length - 1]!;
 
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
@@ -30,97 +28,72 @@ export function HeroBackdrop() {
         fill="none"
       >
         <defs>
-          <linearGradient id="ma-line" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="var(--accent)" stopOpacity="0.15" />
-            <stop offset="0.6" stopColor="var(--accent)" stopOpacity="0.7" />
+          <linearGradient id="trail-line" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stopColor="var(--accent)" stopOpacity="0.2" />
+            <stop offset="0.55" stopColor="var(--accent)" stopOpacity="0.75" />
             <stop offset="1" stopColor="var(--accent)" stopOpacity="1" />
           </linearGradient>
-          <linearGradient id="ma-area" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="var(--accent)" stopOpacity="0.12" />
-            <stop offset="1" stopColor="var(--accent)" stopOpacity="0" />
-          </linearGradient>
-          <radialGradient id="last-glow">
-            <stop offset="0" stopColor="var(--accent)" stopOpacity="0.5" />
+          <radialGradient id="summit-glow">
+            <stop offset="0" stopColor="var(--accent)" stopOpacity="0.55" />
             <stop offset="1" stopColor="var(--accent)" stopOpacity="0" />
           </radialGradient>
         </defs>
 
-        {/* Price levels */}
-        {PRICE_LEVELS.map(({ y, label }) => (
-          <g key={y}>
-            <line x1="0" x2="1440" y1={y} y2={y} stroke="var(--border)" strokeDasharray="2 6" strokeWidth="1" />
-            <text x="1428" y={y - 6} textAnchor="end" fill="var(--text-muted)" fontSize="11" opacity="0.6" className="tabular">
-              {label}
-            </text>
-          </g>
+        {/* Topographic contours */}
+        {CONTOURS.map((d, i) => (
+          <motion.path
+            key={d}
+            d={d}
+            stroke="var(--text-muted)"
+            strokeOpacity={0.22 + i * 0.03}
+            strokeWidth="1"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.2, delay: 0.1 + i * 0.08, ease: EASE }}
+          />
         ))}
 
-        {/* Soft area under the moving average */}
+        {/* Faint full trail, then the gold trail drawing itself on top */}
+        <path d={TRAIL} stroke="var(--accent)" strokeOpacity="0.12" strokeWidth="2" strokeDasharray="2 8" strokeLinecap="round" />
         <motion.path
-          d={`${MOVING_AVERAGE} L ${last.x} 900 L ${first.x} 900 Z`}
-          fill="url(#ma-area)"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: CANDLES_DONE * 0.6 }}
-        />
-
-        {/* Candles: filled gold when the price rises, hollow when it falls */}
-        {CANDLES.map((c, i) => {
-          const top = Math.min(c.open, c.close);
-          const height = Math.max(2, Math.abs(c.close - c.open));
-          return (
-            <motion.g
-              key={c.x}
-              style={{ transformBox: "fill-box", originY: 1 }}
-              initial={{ opacity: 0, scaleY: 0.2 }}
-              animate={{ opacity: 1, scaleY: 1 }}
-              transition={{ duration: 0.45, delay: 0.15 + i * STAGGER, ease: EASE }}
-            >
-              <line
-                x1={c.x}
-                x2={c.x}
-                y1={c.high}
-                y2={c.low}
-                stroke={c.up ? "var(--accent)" : "var(--text-muted)"}
-                strokeOpacity={c.up ? 0.75 : 0.45}
-                strokeWidth="1.25"
-              />
-              <rect
-                x={c.x - CANDLE_BODY / 2}
-                y={top}
-                width={CANDLE_BODY}
-                height={height}
-                rx="1.5"
-                fill={c.up ? "var(--accent)" : "var(--bg)"}
-                fillOpacity={c.up ? 0.6 : 1}
-                stroke={c.up ? "var(--accent)" : "var(--text-muted)"}
-                strokeOpacity={c.up ? 0.9 : 0.5}
-                strokeWidth="1.25"
-              />
-            </motion.g>
-          );
-        })}
-
-        {/* Moving average: the gold growth line */}
-        <motion.path
-          d={MOVING_AVERAGE}
-          stroke="url(#ma-line)"
-          strokeWidth="2"
+          d={TRAIL}
+          stroke="url(#trail-line)"
+          strokeWidth="2.5"
           strokeLinecap="round"
+          strokeDasharray="10 9"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 0.6, delay: CANDLES_DONE * 0.5, ease: EASE }}
+          transition={{ duration: TRAIL_DURATION, delay: 0.35, ease: EASE }}
         />
 
-        {/* Latest price marker */}
+        {/* Milestones light up as the trail reaches them */}
+        {MILESTONES.slice(0, -1).map((m, i) => (
+          <motion.g
+            key={`${m.x}-${m.y}`}
+            initial={{ opacity: 0, scale: 0.4 }}
+            animate={{ opacity: 1, scale: 1 }}
+            style={{ transformBox: "fill-box", originX: 0.5, originY: 0.5 }}
+            transition={{ duration: 0.35, delay: 0.35 + TRAIL_DURATION * ((i + 1) / MILESTONES.length), ease: EASE }}
+          >
+            <circle cx={m.x} cy={m.y} r="9" fill="var(--bg)" stroke="var(--accent)" strokeOpacity="0.8" strokeWidth="1.5" />
+            <circle cx={m.x} cy={m.y} r="3" fill="var(--accent)" />
+          </motion.g>
+        ))}
+
+        {/* Summit with flag */}
         <motion.g
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: CANDLES_DONE + 0.2 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.35 + TRAIL_DURATION, ease: EASE }}
         >
-          <line x1={last.x} x2="1440" y1={last.close} y2={last.close} stroke="var(--accent)" strokeOpacity="0.5" strokeDasharray="3 4" />
-          <circle cx={last.x} cy={last.close} r="22" fill="url(#last-glow)" />
-          <circle cx={last.x} cy={last.close} r="3.5" fill="var(--accent)" />
+          <circle cx={summit.x} cy={summit.y} r="40" fill="url(#summit-glow)" />
+          <circle cx={summit.x} cy={summit.y} r="5" fill="var(--accent)" />
+          <line x1={summit.x} x2={summit.x} y1={summit.y} y2={summit.y - 48} stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" />
+          <path
+            d={`M ${summit.x} ${summit.y - 48} L ${summit.x + 30} ${summit.y - 39} L ${summit.x} ${summit.y - 30} Z`}
+            fill="var(--accent)"
+            fillOpacity="0.85"
+          />
         </motion.g>
       </svg>
 

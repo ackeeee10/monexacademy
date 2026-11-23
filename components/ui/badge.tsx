@@ -9,7 +9,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         neutral: "border-border bg-surface-2 text-muted",
-        /** Featured, Elite and MONEX Original labels. */
+        /** Featured, Elite and Main Quest Original labels. */
         accent: "border-accent/40 bg-accent/10 text-accent",
         success: "border-success/40 bg-success/10 text-success",
         danger: "border-danger/40 bg-danger/10 text-danger",

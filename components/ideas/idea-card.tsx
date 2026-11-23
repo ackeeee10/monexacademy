@@ -16,7 +16,7 @@ export async function IdeaCard({ idea }: { idea: IdeaSummary }) {
     <Link href={`/ideas/${idea.slug}`} className="group block h-full">
       <Card interactive className="flex h-full flex-col gap-4 p-6">
         <div className="flex flex-wrap items-center gap-2">
-          {idea.isMonexOriginal && <Badge variant="accent">{t("monexOriginal")}</Badge>}
+          {idea.isOriginal && <Badge variant="accent">{t("original")}</Badge>}
           {idea.isFeatured && <Badge variant="accent">{t("featured")}</Badge>}
           <span className="text-xs text-muted">{idea.categoryName}</span>
         </div>
@@ -56,7 +56,7 @@ export async function IdeaCard({ idea }: { idea: IdeaSummary }) {
         </dl>
 
         <div className="flex items-center justify-between text-xs text-muted">
-          <span>{idea.isMonexOriginal ? t("byMonex") : t("byAuthor", { name: idea.authorUsername ? `@${idea.authorUsername}` : "—" })}</span>
+          <span>{idea.isOriginal ? t("byOriginals") : t("byAuthor", { name: idea.authorUsername ? `@${idea.authorUsername}` : "—" })}</span>
           <span className="inline-flex items-center gap-1">
             <Bookmark className="size-3.5" aria-hidden />
             {t("saves", { count: idea.savesCount })}

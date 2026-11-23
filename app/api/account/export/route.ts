@@ -15,7 +15,7 @@ export async function GET() {
   return new NextResponse(JSON.stringify(data, null, 2), {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Content-Disposition": `attachment; filename="monex-academy-data-${date}.json"`,
+      "Content-Disposition": `attachment; filename="main-quest-academy-data-${date}.json"`,
       "Cache-Control": "no-store",
     },
   });

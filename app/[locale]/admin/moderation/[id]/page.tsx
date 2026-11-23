@@ -53,7 +53,7 @@ async function Review({ params }: { params: Props["params"] }) {
           <span>{idea.categoryName}</span>
           <span aria-hidden>·</span>
           <span>
-            {idea.isMonexOriginal ? tIdeas("byMonex") : tIdeas("byAuthor", { name: idea.authorUsername ? `@${idea.authorUsername}` : "—" })}
+            {idea.isOriginal ? tIdeas("byOriginals") : tIdeas("byAuthor", { name: idea.authorUsername ? `@${idea.authorUsername}` : "—" })}
           </span>
         </div>
         <h2 className="text-2xl font-bold text-text">{idea.title}</h2>

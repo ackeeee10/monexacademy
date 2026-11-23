@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-import { MARK_ARROW, MARK_STROKES, WORDMARK_ACADEMY, WORDMARK_MONEX } from "./logo-paths";
+import { MARK_ARROW, MARK_STROKES, WORDMARK_ACADEMY, WORDMARK_MAIN_QUEST } from "./logo-paths";
 
 type LogoProps = {
   className?: string;
@@ -34,18 +34,18 @@ function a11yProps(title: string | null) {
     : ({ role: "img", "aria-label": title } as const);
 }
 
-/** Full logo: mark + "MONEX / ACADEMY" wordmark. Inherits the current text color. */
-export function Logo({ className, title = "MONEX Academy" }: LogoProps) {
+/** Full logo: mark + "MAIN QUEST / ACADEMY" wordmark. Inherits the current text color. */
+export function Logo({ className, title = "Main Quest Academy" }: LogoProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="-2 2 697 162"
+      viewBox="-2 2 982 162"
       className={cn("h-8 w-auto", className)}
       {...a11yProps(title)}
     >
       <g fill="currentColor">
         <MarkShapes />
-        <path d={WORDMARK_MONEX} />
+        <path d={WORDMARK_MAIN_QUEST} />
         <path d={WORDMARK_ACADEMY} />
       </g>
     </svg>
@@ -53,7 +53,7 @@ export function Logo({ className, title = "MONEX Academy" }: LogoProps) {
 }
 
 /** The M mark alone — used for favicon, app icon and compact spaces. */
-export function LogoMark({ className, title = "MONEX Academy" }: LogoProps) {
+export function LogoMark({ className, title = "Main Quest Academy" }: LogoProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

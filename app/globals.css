@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * MONEX Academy design tokens (Master Prompt, section 3.3).
+ * Main Quest Academy design tokens (Master Prompt, section 3.3).
  * Components must use these tokens only — never raw hex values.
  * Light values live on :root; dark values apply via [data-theme="dark"]
  * (set before first paint by the inline theme script) or, when JS is

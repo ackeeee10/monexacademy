@@ -34,7 +34,7 @@ export type IdeaSummary = {
   workMode: WorkMode;
   teamMode: TeamMode;
   lookingForRoles: string[];
-  isMonexOriginal: boolean;
+  isOriginal: boolean;
   isFeatured: boolean;
   featuredUntil: string | null;
   savesCount: number;
@@ -89,7 +89,7 @@ function toSummary(row: Row): IdeaSummary {
     workMode: row.work_mode as WorkMode,
     teamMode: row.team_mode as TeamMode,
     lookingForRoles: (row.looking_for_roles as string[] | null) ?? [],
-    isMonexOriginal: row.source === "monex",
+    isOriginal: row.source === "monex",
     isFeatured: featuredUntil !== null && new Date(featuredUntil) > new Date(),
     featuredUntil,
     savesCount: row.saves_count as number,
