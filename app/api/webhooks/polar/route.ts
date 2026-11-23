@@ -32,7 +32,11 @@ export async function POST(request: Request) {
   try {
     event = await webhooks.validateEvent(body, headers, secret);
   } catch (error) {
-    if (error instanceof webhooks.PolarWebhookVerificationError) return json({ error: "invalid_signature" }, 403);
+    if (error instanceof webhooks.PolarWebhookVerificationError) {
+      // Reason only (e.g. "No matching signature found"); never the secret.
+      console.warn("[polar webhook] signature rejected:", error.message);
+      return json({ error: "invalid_signature", reason: error.message }, 403);
+    }
     // Events we don't subscribe to (or newer types) are acknowledged and ignored.
     if (error instanceof webhooks.PolarWebhookUnknownTypeError) return json({ received: true, ignored: true }, 202);
     console.error("[polar webhook] invalid payload", error);
