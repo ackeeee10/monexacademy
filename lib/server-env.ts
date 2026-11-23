@@ -13,5 +13,12 @@ export const serverEnv = {
   /** Secret that signs Polar webhooks. */
   polarWebhookSecret: (): string | undefined => process.env.POLAR_WEBHOOK_SECRET || undefined,
   /** "sandbox" (default) or "production". */
-  polarServer: (): "sandbox" | "production" => (process.env.POLAR_SERVER === "production" ? "production" : "sandbox"),
+  polarServer: (): "sandbox" | "production" => (polarServerValue() === "production" ? "production" : "sandbox"),
 } as const;
+
+/** POLAR_SERVER, tolerant of case, spaces and quotes. */
+export function polarServerValue(): string | null {
+  const raw = process.env.POLAR_SERVER;
+  if (!raw) return null;
+  return raw.trim().replace(/^["']|["']$/g, "").trim().toLowerCase();
+}

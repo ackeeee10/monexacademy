@@ -1,5 +1,7 @@
 import { connection, NextResponse } from "next/server";
 
+import { polarServerValue } from "@/lib/server-env";
+
 /**
  * Configuration check for the owner: shows WHICH settings are present,
  * never their values. Runs on every request (not prerendered), so it shows
@@ -7,6 +9,7 @@ import { connection, NextResponse } from "next/server";
  */
 export async function GET() {
   await connection();
+  const polarServer = polarServerValue();
   const has = (v: string | undefined) => Boolean(v && v.trim());
   return NextResponse.json(
     {
@@ -21,11 +24,7 @@ export async function GET() {
         EMAIL_FROM: has(process.env.EMAIL_FROM),
         POLAR_ACCESS_TOKEN: has(process.env.POLAR_ACCESS_TOKEN),
         POLAR_WEBHOOK_SECRET: has(process.env.POLAR_WEBHOOK_SECRET),
-        POLAR_SERVER: !process.env.POLAR_SERVER
-          ? null
-          : ["sandbox", "production"].includes(process.env.POLAR_SERVER.trim())
-            ? process.env.POLAR_SERVER.trim()
-            : "invalid value",
+        POLAR_SERVER: polarServer === null ? null : ["sandbox", "production"].includes(polarServer) ? polarServer : "invalid value",
       },
     },
     { headers: { "Cache-Control": "no-store" } },
